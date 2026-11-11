@@ -10,5 +10,85 @@
     "license": "MIT",
     "summary": "Codex-native project planning, task tracking, acceptance evidence, GitHub Issues dry-runs, and guarded Git worktrees.",
     "source": "Yeachan-Heo/oh-my-claudecode"
+  },
+  {
+    "id": "jeffallan-architecture-designer",
+    "version": "0.1.0",
+    "status": "runtime-verified",
+    "verification": {
+      "harness": "passed",
+      "real_codex_session": "passed"
+    },
+    "license": "MIT",
+    "summary": "System architecture, trade-offs, ADRs, scalability, and component design guidance.",
+    "source": "JeffAllan/claude-skills",
+    "source_skill": "architecture-designer",
+    "limitations": [
+      "No Claude plugin commands or MCP service is included."
+    ]
+  },
+  {
+    "id": "jeffallan-code-reviewer",
+    "version": "0.1.0",
+    "status": "runtime-verified",
+    "verification": {
+      "harness": "passed",
+      "real_codex_session": "passed"
+    },
+    "license": "MIT",
+    "summary": "Structured code and diff review with security, performance, testing, and maintainability checks.",
+    "source": "JeffAllan/claude-skills",
+    "source_skill": "code-reviewer",
+    "limitations": [
+      "Claude allowed-tools metadata was removed; Codex manages tool permissions."
+    ]
+  },
+  {
+    "id": "jeffallan-debugging-wizard",
+    "version": "0.1.0",
+    "status": "runtime-verified",
+    "verification": {
+      "harness": "passed",
+      "real_codex_session": "passed"
+    },
+    "license": "MIT",
+    "summary": "Hypothesis-driven error, stack-trace, log, and root-cause analysis.",
+    "source": "JeffAllan/claude-skills",
+    "source_skill": "debugging-wizard",
+    "limitations": [
+      "Debugger commands remain advisory and are not executed automatically."
+    ]
+  },
+  {
+    "id": "jeffallan-secure-code-guardian",
+    "version": "0.1.0",
+    "status": "runtime-verified",
+    "verification": {
+      "harness": "passed",
+      "real_codex_session": "passed"
+    },
+    "license": "MIT",
+    "summary": "Secure coding guidance for authentication, validation, OWASP risks, and security headers.",
+    "source": "JeffAllan/claude-skills",
+    "source_skill": "secure-code-guardian",
+    "limitations": [
+      "This is guidance, not a penetration test or compliance certification."
+    ]
+  },
+  {
+    "id": "jeffallan-test-master",
+    "version": "0.1.0",
+    "status": "runtime-verified",
+    "verification": {
+      "harness": "passed",
+      "real_codex_session": "passed"
+    },
+    "license": "MIT",
+    "summary": "Test strategy, unit/integration/E2E planning, quality gates, and defect reporting.",
+    "source": "JeffAllan/claude-skills",
+    "source_skill": "test-master",
+    "limitations": [
+      "The skill proposes tests; it does not grant project dependencies or run them by itself."
+    ]
   }
 ]

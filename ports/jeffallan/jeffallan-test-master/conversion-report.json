@@ -1,0 +1,36 @@
+{
+  "source_skill": "test-master",
+  "source_repository": "JeffAllan/claude-skills",
+  "source_revision": "078a25cc5bfd8011459be7b91d004e900c1d02d3",
+  "source_license": "MIT",
+  "copied_reference_assets": [
+    "references/automation-frameworks.md",
+    "references/e2e-testing.md",
+    "references/integration-testing.md",
+    "references/performance-testing.md",
+    "references/qa-methodology.md",
+    "references/security-testing.md",
+    "references/tdd-iron-laws.md",
+    "references/test-reports.md",
+    "references/testing-anti-patterns.md",
+    "references/unit-testing.md"
+  ],
+  "adapted_files": [
+    "SKILL.md",
+    "references/automation-frameworks.md",
+    "references/e2e-testing.md",
+    "references/integration-testing.md",
+    "references/performance-testing.md",
+    "references/qa-methodology.md",
+    "references/security-testing.md",
+    "references/tdd-iron-laws.md",
+    "references/test-reports.md",
+    "references/testing-anti-patterns.md",
+    "references/unit-testing.md"
+  ],
+  "nonportable_features": [
+    "claude-runtime-name"
+  ],
+  "rejected": [],
+  "status": "converted"
+}

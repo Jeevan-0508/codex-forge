@@ -1,0 +1,37 @@
+{
+  "manifest_version": 1,
+  "install_contract": "codex-forge-v1",
+  "id": "jeffallan-secure-code-guardian",
+  "version": "0.1.0",
+  "runtime": "codex",
+  "entrypoint": "SKILL.md",
+  "verification_status": "runtime-verified",
+  "verification": {
+    "harness": "passed",
+    "real_codex_session": "passed"
+  },
+  "license_status": "cleared",
+  "license": "MIT",
+  "dependencies": [],
+  "source": {
+    "repository": "JeffAllan/claude-skills",
+    "url": "https://github.com/JeffAllan/claude-skills",
+    "revision": "078a25cc5bfd8011459be7b91d004e900c1d02d3",
+    "original_license": "MIT",
+    "attribution": "Jeff Allan",
+    "copied_upstream_files": true,
+    "copy_policy": "adapted-with-attribution"
+  },
+  "files": {
+    "conversion-report.json": "93fbba886e2a5b8396ed38227eb6592372c014914b00057c237fe6a378f3daf2",
+    "CONVERSION.md": "ce1524764e5e9a400d99e275ff65a265e1c8f2b286c3c4c974bb4b7d30602f85",
+    "LICENSE.txt": "06dcddbb6908a0c6dd4a9e8ec822eea41d5a460a53089fecccc8a68049e99241",
+    "NOTICE.md": "edc1ac11256d830b280678a2cb0e0e7f19605ecdadadeac1ea4146ee9311b889",
+    "references/authentication.md": "4d680ac47602955de09a4bb248346a91b96158d0b7e23de4fe20ecfda2ff8ac2",
+    "references/input-validation.md": "2f227b437b0d1184ad557c3ba48bf6e0db4df43c8949c9c0fc923c69847a040a",
+    "references/owasp-prevention.md": "4baed17eeefd365c1b46cf54e0915e99ce85666b345faf40dd9c6bf9e33372b1",
+    "references/security-headers.md": "59333cf6d3a13b8675d98afd0888e224a1e6b644f755b08a46ebcef3fb6be281",
+    "references/xss-csrf.md": "4d9976faed6ff05ce2677cdccee1df0be2980375fcdc6151ea59553fce5ca470",
+    "SKILL.md": "6bd3ac2a20a45ed2e68cba32330cb76b90f5c43ef2c5e4b27c76fd9d889dd707"
+  }
+}

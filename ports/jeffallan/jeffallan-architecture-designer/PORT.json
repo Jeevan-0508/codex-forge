@@ -1,0 +1,37 @@
+{
+  "manifest_version": 1,
+  "install_contract": "codex-forge-v1",
+  "id": "jeffallan-architecture-designer",
+  "version": "0.1.0",
+  "runtime": "codex",
+  "entrypoint": "SKILL.md",
+  "verification_status": "runtime-verified",
+  "verification": {
+    "harness": "passed",
+    "real_codex_session": "passed"
+  },
+  "license_status": "cleared",
+  "license": "MIT",
+  "dependencies": [],
+  "source": {
+    "repository": "JeffAllan/claude-skills",
+    "url": "https://github.com/JeffAllan/claude-skills",
+    "revision": "078a25cc5bfd8011459be7b91d004e900c1d02d3",
+    "original_license": "MIT",
+    "attribution": "Jeff Allan",
+    "copied_upstream_files": true,
+    "copy_policy": "adapted-with-attribution"
+  },
+  "files": {
+    "conversion-report.json": "300403b1f1e358df420f4e3583c00e7f7243ffc811edec10361672920e9a1dea",
+    "CONVERSION.md": "ce1524764e5e9a400d99e275ff65a265e1c8f2b286c3c4c974bb4b7d30602f85",
+    "LICENSE.txt": "06dcddbb6908a0c6dd4a9e8ec822eea41d5a460a53089fecccc8a68049e99241",
+    "NOTICE.md": "288f9afdf902e97107480d098686f593fb34fd86ff81044ca871029ab5b9fc82",
+    "references/adr-template.md": "cada2aa2f8fa039ba63ab95499cbe653a28110f9f406040a06966552026fea4b",
+    "references/architecture-patterns.md": "954bde741cffe6dec00acb63840bbb79654d2647ca8f7c9a8f99f5888b94c5f9",
+    "references/database-selection.md": "6439a36138654947acb808eeff1fff5862894ef94a7210e8fd540bb2641c5a80",
+    "references/nfr-checklist.md": "37b9b0f083bd224acccb04eec86edc09a494c693a4ad0ec32ea24f472c122d70",
+    "references/system-design.md": "b33ff621c6461eb321d18fc9923c4bba689776e1cd0f0c00945584c2698319a1",
+    "SKILL.md": "a599948bae3751ac6123bbf285e6c043877d1b806307d21282fb07c38b083497"
+  }
+}

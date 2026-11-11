@@ -14,7 +14,7 @@ Live catalog: [jeevan-0508.github.io/codex-forge](https://jeevan-0508.github.io/
 - Safe Markdown skill conversion with dry-run mode and conversion records.
 - Validation for frontmatter, suspicious installer pipelines, and common credential patterns.
 - Searchable static GitHub Pages catalog.
-- One runtime-verified Codex port: `project-flow` (deterministic harness and real `codex exec` session verified).
+- Six runtime-verified Codex ports: `project-flow` plus five individually installable Jeff Allan skills (deterministic harness and real `codex exec` session verified).
 - Deterministic Node test suite, isolated runtime harness, CI, security scan, license gate, and weekly upstream-report workflow.
 
 CCPM was audited first. It already supports Codex through the Agent Skills format, so CODEX//FORGE does not duplicate it. The first independent port is `project-flow`, which provides a smaller Codex-native project workflow without copying CCPM or its source files.
@@ -73,6 +73,8 @@ npm run codex-runtime
 ```
 
 `npm run codex-runtime` launches the installed local Codex CLI in a temporary Git project, asks it to use `project-flow`, and verifies the generated PRD, task decomposition, and status output. It requires a working Codex login; otherwise it reports harness-only evidence. The website is static and cannot execute conversions. Use the local CLI for conversion and validation. GitHub Actions does not merge generated ports or run arbitrary upstream code.
+
+The Jeff Allan batch conversion is reproducible with `node scripts/convert-jeffallan.mjs --source <clone> --revision <sha>`. It discovers all source skill directories, converts only the selected five, preserves reference assets and MIT notices, and records unsupported Claude-specific features. `npm run codex-multiskill-runtime` installs those five into an isolated Codex project and verifies each real skill session before promotion.
 
 ## License and security
 

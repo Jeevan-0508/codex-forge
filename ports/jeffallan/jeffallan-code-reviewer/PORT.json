@@ -1,0 +1,38 @@
+{
+  "manifest_version": 1,
+  "install_contract": "codex-forge-v1",
+  "id": "jeffallan-code-reviewer",
+  "version": "0.1.0",
+  "runtime": "codex",
+  "entrypoint": "SKILL.md",
+  "verification_status": "runtime-verified",
+  "verification": {
+    "harness": "passed",
+    "real_codex_session": "passed"
+  },
+  "license_status": "cleared",
+  "license": "MIT",
+  "dependencies": [],
+  "source": {
+    "repository": "JeffAllan/claude-skills",
+    "url": "https://github.com/JeffAllan/claude-skills",
+    "revision": "078a25cc5bfd8011459be7b91d004e900c1d02d3",
+    "original_license": "MIT",
+    "attribution": "Jeff Allan",
+    "copied_upstream_files": true,
+    "copy_policy": "adapted-with-attribution"
+  },
+  "files": {
+    "conversion-report.json": "0258216c68ca8e1174a9962890505b0dd3ce6dd4382d220be2921ad3c687e909",
+    "CONVERSION.md": "2aa5d6ae87c602536d17ae93f77f009c1bb4dd250b5b7c8bf79a1f1acc94a8c2",
+    "LICENSE.txt": "06dcddbb6908a0c6dd4a9e8ec822eea41d5a460a53089fecccc8a68049e99241",
+    "NOTICE.md": "6485174b6302ac29dd5fb8d489f7bde7c1cb9df70331fc9fed48837c87f2ad2d",
+    "references/common-issues.md": "19de3ccd5611e82d1c94636aaf4b0a11a68a09799459285a3ab250a24c04265c",
+    "references/feedback-examples.md": "e87d7a255efaa04a8ee6acfa53f642974c4b2919658671418e670d0db7d038f6",
+    "references/receiving-feedback.md": "62f3958b0be7f3d03cde7bbf00d3f6051a6d98081be3e97d2e7cca5501749c04",
+    "references/report-template.md": "2f2b63c8543b510d4dceffb9336627d02aa5f6f722a805d6fa93572d7673a885",
+    "references/review-checklist.md": "c0e348f3896a274c407da7bf52570377dd9b7d0d3284d8f582559d890c3dfbcc",
+    "references/spec-compliance-review.md": "a5fcb93e7058b4c089b871ae954d8ab5cf45702e91c54242b06cf7af455f57df",
+    "SKILL.md": "8808a33f6cc62e0e7fa1e0041fb36b5440580fed0bd54885e8e372b3b5e82414"
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "source_skill": "code-reviewer",
+  "source_repository": "JeffAllan/claude-skills",
+  "source_revision": "078a25cc5bfd8011459be7b91d004e900c1d02d3",
+  "source_license": "MIT",
+  "copied_reference_assets": [
+    "references/common-issues.md",
+    "references/feedback-examples.md",
+    "references/receiving-feedback.md",
+    "references/report-template.md",
+    "references/review-checklist.md",
+    "references/spec-compliance-review.md"
+  ],
+  "adapted_files": [
+    "SKILL.md",
+    "references/common-issues.md",
+    "references/feedback-examples.md",
+    "references/receiving-feedback.md",
+    "references/report-template.md",
+    "references/review-checklist.md",
+    "references/spec-compliance-review.md"
+  ],
+  "nonportable_features": [
+    "claude-runtime-name",
+    "claude-tool-frontmatter"
+  ],
+  "rejected": [],
+  "status": "converted"
+}

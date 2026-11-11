@@ -1,0 +1,37 @@
+{
+  "manifest_version": 1,
+  "install_contract": "codex-forge-v1",
+  "id": "jeffallan-debugging-wizard",
+  "version": "0.1.0",
+  "runtime": "codex",
+  "entrypoint": "SKILL.md",
+  "verification_status": "runtime-verified",
+  "verification": {
+    "harness": "passed",
+    "real_codex_session": "passed"
+  },
+  "license_status": "cleared",
+  "license": "MIT",
+  "dependencies": [],
+  "source": {
+    "repository": "JeffAllan/claude-skills",
+    "url": "https://github.com/JeffAllan/claude-skills",
+    "revision": "078a25cc5bfd8011459be7b91d004e900c1d02d3",
+    "original_license": "MIT",
+    "attribution": "Jeff Allan",
+    "copied_upstream_files": true,
+    "copy_policy": "adapted-with-attribution"
+  },
+  "files": {
+    "conversion-report.json": "087019b3d5bc186b3b5e37cf60014d2f3bbc9d60ffc3b979419755c51d9f45b0",
+    "CONVERSION.md": "ce1524764e5e9a400d99e275ff65a265e1c8f2b286c3c4c974bb4b7d30602f85",
+    "LICENSE.txt": "06dcddbb6908a0c6dd4a9e8ec822eea41d5a460a53089fecccc8a68049e99241",
+    "NOTICE.md": "3dc9183836ff39b1d401239dc3c856592a1f4e92d2d0a9efec65bcab8add0a07",
+    "references/common-patterns.md": "34e8957fc8dd44033ce6e968c3fca55259b40ba91dc7eb81a819fd2442b08d0a",
+    "references/debugging-tools.md": "406df18ffd885ed96e8ccb541d22b0d8bcd0342cd7a89cc10b82e2675e118333",
+    "references/quick-fixes.md": "5cb8d18dbf1d445e82af556368098b52c8fa1dc70c63ab2d0897bbc5c5744ab1",
+    "references/strategies.md": "2a28d131e430beb667db1efc5dbc2beaeb38572a76ea998ef0330ab27b2b399e",
+    "references/systematic-debugging.md": "1e4a89c67ddfb8e500d95ee21d9a665c7b1a0204c97f752d03d04e96740a07f9",
+    "SKILL.md": "46a36fb465a86213a087dc4aac6875e6554da980a253293cbc870737e0b859e2"
+  }
+}

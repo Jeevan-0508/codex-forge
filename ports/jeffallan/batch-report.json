@@ -1,0 +1,16 @@
+{
+  "source": "JeffAllan/claude-skills",
+  "revision": "078a25cc5bfd8011459be7b91d004e900c1d02d3",
+  "license": "MIT",
+  "discovered": 67,
+  "selected": 5,
+  "converted": [
+    "architecture-designer",
+    "code-reviewer",
+    "debugging-wizard",
+    "secure-code-guardian",
+    "test-master"
+  ],
+  "rejected": [],
+  "real_codex_session": "passed"
+}
