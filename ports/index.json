@@ -1,0 +1,10 @@
+[
+  {
+    "id": "project-flow",
+    "version": "0.1.0",
+    "status": "runtime-verified",
+    "license": "MIT",
+    "summary": "Codex-native project planning, task tracking, acceptance evidence, GitHub Issues dry-runs, and guarded Git worktrees.",
+    "source": "Yeachan-Heo/oh-my-claudecode"
+  }
+]

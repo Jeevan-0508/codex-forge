@@ -1,5 +1,7 @@
 # Verified ports
 
-There are currently **zero runtime-verified ports**.
+There is currently **one runtime-verified port**: `project-flow`.
 
-The repository ships a safe conversion engine and a local fixture so the conversion path can be tested without copying or executing third-party code. A project is not added here as a verified port until its license, generated output, Codex behavior, and limitations have evidence.
+`project-flow` is an independent Codex-native workflow for local PRDs, task decomposition, progress state, acceptance evidence, GitHub Issues dry-runs, and guarded Git worktrees. It is not a copy of the upstream project used as its attribution source.
+
+A project is not added here as a verified port until its license, generated output, Codex discovery contract, runtime behavior, and limitations have evidence.
