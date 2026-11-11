@@ -5,7 +5,9 @@ metadata:
   source: Yeachan-Heo/oh-my-claudecode
   source-license: MIT
   implementation: independent-codex-adapter
-  verification: runtime-verified
+  verification:
+    harness: passed
+    real-codex-session: passed
 ---
 
 # Project Flow

@@ -14,7 +14,7 @@ Live catalog: [jeevan-0508.github.io/codex-forge](https://jeevan-0508.github.io/
 - Safe Markdown skill conversion with dry-run mode and conversion records.
 - Validation for frontmatter, suspicious installer pipelines, and common credential patterns.
 - Searchable static GitHub Pages catalog.
-- One runtime-verified Codex port: `project-flow`.
+- One runtime-verified Codex port: `project-flow` (deterministic harness and real `codex exec` session verified).
 - Deterministic Node test suite, isolated runtime harness, CI, security scan, license gate, and weekly upstream-report workflow.
 
 CCPM was audited first. It already supports Codex through the Agent Skills format, so CODEX//FORGE does not duplicate it. The first independent port is `project-flow`, which provides a smaller Codex-native project workflow without copying CCPM or its source files.
@@ -51,6 +51,8 @@ node "$HOME/.agents/skills/project-flow/scripts/project-flow.mjs" plan --slug ch
 
 The workflow keeps local state in `.codex-forge/projects/<slug>/`, requires explicit `--passed` evidence to complete a task, and defaults GitHub Issue and worktree operations to dry-run. Passing `--approve` is required for those external writes.
 
+Verification statuses are separate: `harness` means the local deterministic runner passed; `real_codex_session` means an installed Codex CLI session discovered the skill and exercised its workflow.
+
 ## Compatibility classes
 
 | Class | Meaning |
@@ -67,9 +69,10 @@ The workflow keeps local state in `.codex-forge/projects/<slug>/`, requires expl
 ```powershell
 npm test
 npm run verify
+npm run codex-runtime
 ```
 
-The website is static and cannot execute conversions. Use the local CLI for conversion and validation. GitHub Actions does not merge generated ports or run arbitrary upstream code.
+`npm run codex-runtime` launches the installed local Codex CLI in a temporary Git project, asks it to use `project-flow`, and verifies the generated PRD, task decomposition, and status output. It requires a working Codex login; otherwise it reports harness-only evidence. The website is static and cannot execute conversions. Use the local CLI for conversion and validation. GitHub Actions does not merge generated ports or run arbitrary upstream code.
 
 ## License and security
 
