@@ -59,3 +59,35 @@ test('installer rejects tampered files and unsafe manifest paths', () => {
   fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
   assert.throws(() => validateManifest(copiedAgain), /unsafe manifest path/);
 });
+
+test('installer rejects unexpected files, malformed required fields, and backup collisions', () => {
+  const extra = copyPort();
+  fs.writeFileSync(path.join(extra, 'unexpected.txt'), 'must not be installed');
+  assert.throws(() => validateManifest(extra), /unexpected file/);
+
+  const malformed = copyPort();
+  const manifestPath = path.join(malformed, 'PORT.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  delete manifest.source.revision;
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+  assert.throws(() => validateManifest(malformed), /source\.revision is required/);
+
+  const skillRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-forge-skills-'));
+  installPort(port, { skillRoot });
+  const backupRoot = path.join(skillRoot, '.codex-forge-backups');
+  fs.mkdirSync(backupRoot, { recursive: true });
+  fs.writeFileSync(path.join(backupRoot, 'project-flow-fixed'), 'corrupted backup placeholder');
+  assert.throws(() => installPort(port, { skillRoot, approveOverwrite: true, backupToken: 'fixed' }), /collision or corrupted backup/);
+  assert.equal(fs.existsSync(path.join(skillRoot, 'project-flow', 'PORT.json')), true);
+});
+
+test('installer rejects symbolic links without following them', (t) => {
+  const copied = copyPort();
+  try {
+    fs.symlinkSync(path.join(copied, 'SKILL.md'), path.join(copied, 'linked-skill.md'), 'file');
+  } catch (error) {
+    t.skip(`symbolic links unavailable in this environment: ${error.code || error.message}`);
+    return;
+  }
+  assert.throws(() => validateManifest(copied), /symbolic link|unexpected file/);
+});
