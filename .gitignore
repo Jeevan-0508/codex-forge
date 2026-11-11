@@ -1,0 +1,4 @@
+node_modules/
+.tmp/
+.codex-forge-cache/
+apps/web/catalog.json

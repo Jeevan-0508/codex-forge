@@ -1,0 +1,21 @@
+name: Upstream metadata report
+
+on:
+  schedule:
+    - cron: '17 3 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Check catalog schema and security boundaries
+        run: npm run verify
+      - name: Explain monitoring boundary
+        run: echo "Metadata refresh is report-only; no upstream code is executed or merged."

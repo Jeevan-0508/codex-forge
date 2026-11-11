@@ -1,0 +1,5 @@
+{
+  "required": ["id", "repository", "url", "license", "compatibility", "verification_status", "source_revision"],
+  "verification_values": ["metadata-reviewed; runtime-unverified", "runtime-verified", "license-unverified; runtime-unverified", "catalog-reviewed; linked projects unverified"],
+  "compatibility_classes": ["A", "B", "C", "D", "E", "F"]
+}
