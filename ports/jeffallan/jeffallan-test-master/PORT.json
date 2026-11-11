@@ -1,0 +1,42 @@
+{
+  "manifest_version": 1,
+  "install_contract": "codex-forge-v1",
+  "id": "jeffallan-test-master",
+  "version": "0.1.0",
+  "runtime": "codex",
+  "entrypoint": "SKILL.md",
+  "verification_status": "runtime-verified",
+  "verification": {
+    "harness": "passed",
+    "real_codex_session": "passed"
+  },
+  "license_status": "cleared",
+  "license": "MIT",
+  "dependencies": [],
+  "source": {
+    "repository": "JeffAllan/claude-skills",
+    "url": "https://github.com/JeffAllan/claude-skills",
+    "revision": "078a25cc5bfd8011459be7b91d004e900c1d02d3",
+    "original_license": "MIT",
+    "attribution": "Jeff Allan",
+    "copied_upstream_files": true,
+    "copy_policy": "adapted-with-attribution"
+  },
+  "files": {
+    "conversion-report.json": "6639c2bee0b9738050da25862b517475fc03f0948acfb32cb98cd9bc94187d39",
+    "CONVERSION.md": "ce1524764e5e9a400d99e275ff65a265e1c8f2b286c3c4c974bb4b7d30602f85",
+    "LICENSE.txt": "06dcddbb6908a0c6dd4a9e8ec822eea41d5a460a53089fecccc8a68049e99241",
+    "NOTICE.md": "c0523753b58a3ec123f2fcb91b915ce0f971edec1aa7438a14a7e2a9e58de10b",
+    "references/automation-frameworks.md": "1ad32a08a6295656b19c88c24e0d2e7f0416822306172c49de170dd195b003f2",
+    "references/e2e-testing.md": "26d85ec0572ece9556a15eb681f5f4a3200d08f1faf81a41e631f617081050e0",
+    "references/integration-testing.md": "1f59967cdbb6419e7ac3be2818d8fa44f874cd7ed78edb5507ec6e01387ef629",
+    "references/performance-testing.md": "f0928064fccc35bbe67174f8218f2eef34afe69facc0c85476806f596ae4f432",
+    "references/qa-methodology.md": "9277588309c80929241df3302150cae1c966cb83dd1dc2be3125a943fa4d4477",
+    "references/security-testing.md": "e899eedc05127c7bd7081ccbdf3067167b4308b783181923f30749dab18217ce",
+    "references/tdd-iron-laws.md": "1f719ea75af92dac32762b9e27d7f1bd6dfd7be9d71c8b8db7b1c8842b34bed1",
+    "references/test-reports.md": "9202c94244a2da9981fec66042634244478bf8d762061856f71d202e0e4744cf",
+    "references/testing-anti-patterns.md": "ae653194178f04a7fe7662d256e2d11da763d6d2e04fcd091f7b374d70b28945",
+    "references/unit-testing.md": "6165c82a10c79295ce45329fa16895128888ffd874269ee509af56061291c43a",
+    "SKILL.md": "3e0acc63d9c69fdeeaa1cd2951a1ce57e18eba5efe23dc005b5bc46a9be60f84"
+  }
+}

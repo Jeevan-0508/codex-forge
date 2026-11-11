@@ -1,0 +1,26 @@
+{
+  "source_skill": "architecture-designer",
+  "source_repository": "JeffAllan/claude-skills",
+  "source_revision": "078a25cc5bfd8011459be7b91d004e900c1d02d3",
+  "source_license": "MIT",
+  "copied_reference_assets": [
+    "references/adr-template.md",
+    "references/architecture-patterns.md",
+    "references/database-selection.md",
+    "references/nfr-checklist.md",
+    "references/system-design.md"
+  ],
+  "adapted_files": [
+    "SKILL.md",
+    "references/adr-template.md",
+    "references/architecture-patterns.md",
+    "references/database-selection.md",
+    "references/nfr-checklist.md",
+    "references/system-design.md"
+  ],
+  "nonportable_features": [
+    "claude-runtime-name"
+  ],
+  "rejected": [],
+  "status": "converted"
+}

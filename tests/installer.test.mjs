@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { installPort, uninstallPort, validateManifest } from '../packages/installer/install.mjs';
+import { convertBatch, discoverSkillDirectories } from '../packages/converter/batch.mjs';
 
 const port = path.resolve('ports/project-flow');
 
@@ -90,4 +91,40 @@ test('installer rejects symbolic links without following them', (t) => {
     return;
   }
   assert.throws(() => validateManifest(copied), /symbolic link|unexpected file/);
+});
+
+test('batch conversion discovers skills, adapts Claude metadata, and preserves reference assets', () => {
+  const source = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-forge-batch-source-'));
+  const skill = path.join(source, 'skills', 'alpha-skill');
+  fs.mkdirSync(path.join(skill, 'references'), { recursive: true });
+  fs.mkdirSync(path.join(skill, 'assets'), { recursive: true });
+  fs.writeFileSync(path.join(source, 'LICENSE'), 'MIT license fixture\n');
+  fs.writeFileSync(path.join(skill, 'SKILL.md'), '---\nname: alpha-skill\ndescription: Use Claude Code with allowed tools.\nallowed-tools: Read Grep\n---\n\nRead CLAUDE.md and use .claude/config.\n', 'utf8');
+  fs.writeFileSync(path.join(skill, 'references', 'guide.md'), '# Reference\n', 'utf8');
+  fs.writeFileSync(path.join(skill, 'assets', 'icon.bin'), Buffer.from([0, 1, 2, 255]));
+  const output = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-forge-batch-output-'));
+  assert.equal(discoverSkillDirectories(source).length, 1);
+  const result = convertBatch(source, output, { sourceRepository: 'owner/repo', sourceRevision: 'a'.repeat(40), sourceLicenseText: 'MIT license fixture\n', skillNames: ['alpha-skill'] });
+  assert.equal(result.discovered, 1);
+  assert.equal(result.converted.length, 1);
+  const converted = path.join(output, 'jeffallan-alpha-skill');
+  const skillText = fs.readFileSync(path.join(converted, 'SKILL.md'), 'utf8');
+  assert.doesNotMatch(skillText, /allowed-tools:/i);
+  assert.match(skillText, /Codex portability/);
+  assert.equal(fs.readFileSync(path.join(converted, 'assets', 'icon.bin')).equals(Buffer.from([0, 1, 2, 255])), true);
+  assert.equal(fs.existsSync(path.join(converted, 'references', 'guide.md')), true);
+  assert.equal(validateManifest(converted).id, 'jeffallan-alpha-skill');
+});
+
+test('batch conversion rejects declared unsupported dependencies before writing output', () => {
+  const source = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-forge-batch-deps-'));
+  const skill = path.join(source, 'skills', 'dependent-skill');
+  fs.mkdirSync(skill, { recursive: true });
+  fs.writeFileSync(path.join(skill, 'SKILL.md'), '---\nname: dependent-skill\ndescription: Requires a runtime\nrequires: claude-plugin-runtime\n---\n\nUse the runtime.\n', 'utf8');
+  const output = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-forge-batch-deps-out-'));
+  const result = convertBatch(source, output, { sourceRepository: 'owner/repo', sourceRevision: 'b'.repeat(40), skillNames: ['dependent-skill'] });
+  assert.equal(result.converted.length, 0);
+  assert.equal(result.rejected.length, 1);
+  assert.match(result.rejected[0].rejected.join(' '), /dependencies/);
+  assert.equal(fs.existsSync(path.join(output, 'jeffallan-dependent-skill')), false);
 });

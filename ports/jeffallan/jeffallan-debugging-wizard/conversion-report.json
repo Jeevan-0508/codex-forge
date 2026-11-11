@@ -1,0 +1,26 @@
+{
+  "source_skill": "debugging-wizard",
+  "source_repository": "JeffAllan/claude-skills",
+  "source_revision": "078a25cc5bfd8011459be7b91d004e900c1d02d3",
+  "source_license": "MIT",
+  "copied_reference_assets": [
+    "references/common-patterns.md",
+    "references/debugging-tools.md",
+    "references/quick-fixes.md",
+    "references/strategies.md",
+    "references/systematic-debugging.md"
+  ],
+  "adapted_files": [
+    "SKILL.md",
+    "references/common-patterns.md",
+    "references/debugging-tools.md",
+    "references/quick-fixes.md",
+    "references/strategies.md",
+    "references/systematic-debugging.md"
+  ],
+  "nonportable_features": [
+    "claude-runtime-name"
+  ],
+  "rejected": [],
+  "status": "converted"
+}

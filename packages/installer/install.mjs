@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 export const DEFAULT_SKILL_ROOT = path.join(os.homedir(), '.agents', 'skills');
+const TEXT_EXTENSIONS = new Set(['.md', '.txt', '.json', '.mjs', '.js', '.ts', '.yaml', '.yml', '.toml', '.py', '.sh']);
 
 export function resolveSkillRoot(env = process.env) {
   return path.resolve(env.CODEX_SKILL_ROOT || DEFAULT_SKILL_ROOT);
@@ -18,7 +19,9 @@ function normalizedRelative(root, file) {
 }
 
 function sha256(file) {
-  return crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+  const bytes = fs.readFileSync(file);
+  const canonical = TEXT_EXTENSIONS.has(path.extname(file).toLowerCase()) ? bytes.toString('utf8').replace(/\r\n/g, '\n') : bytes;
+  return crypto.createHash('sha256').update(canonical).digest('hex');
 }
 
 function lstatOrNull(file) {
@@ -76,7 +79,9 @@ export function validateManifest(portDir) {
   for (const field of ['repository', 'url', 'revision', 'original_license', 'attribution']) {
     if (typeof manifest.source[field] !== 'string' || !manifest.source[field].trim()) throw new Error(`manifest source.${field} is required`);
   }
-  if (manifest.source.copied_upstream_files !== false) throw new Error('manifest must explicitly confirm no upstream files were copied');
+  const adaptedWithAttribution = manifest.source.copied_upstream_files === true && manifest.source.copy_policy === 'adapted-with-attribution';
+  if (manifest.source.copied_upstream_files !== false && !adaptedWithAttribution) throw new Error('manifest must declare an approved copy policy');
+  if (adaptedWithAttribution && (!manifest.files['NOTICE.md'] || !manifest.files['LICENSE.txt'])) throw new Error('adapted ports must include NOTICE.md and LICENSE.txt');
   const expectedFiles = new Set(['PORT.json']);
   for (const [relative, expectedHash] of Object.entries(manifest.files)) {
     if (!safeRelative(relative)) throw new Error(`unsafe manifest path: ${relative}`);
