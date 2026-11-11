@@ -72,8 +72,11 @@ export function run(argv = process.argv.slice(2), cwd = process.cwd()) {
   }
   const record = readState(slug);
   if (command === 'status') {
-    const counts = Object.groupBy(record.state.tasks, (task) => task.status);
-    return { ok: true, output: { slug, title: record.state.title, status: record.state.status, counts: Object.fromEntries(Object.entries(counts).map(([key, list]) => [key, list.length])), tasks: record.state.tasks } };
+    const counts = record.state.tasks.reduce((result, task) => {
+      result[task.status] = (result[task.status] || 0) + 1;
+      return result;
+    }, {});
+    return { ok: true, output: { slug, title: record.state.title, status: record.state.status, counts, tasks: record.state.tasks } };
   }
   const taskId = value(args, '--task');
   const task = record.state.tasks.find((item) => item.id === taskId);
