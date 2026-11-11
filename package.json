@@ -8,10 +8,11 @@
   "bin": { "codex-forge": "./packages/cli/cli.mjs" },
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "check": "node --check packages/cli/cli.mjs && node --check packages/converter/convert.mjs && node --check packages/discovery/github.mjs && node --check packages/validator/validate.mjs",
+    "check": "node --check packages/cli/cli.mjs && node --check packages/installer/install.mjs && node --check packages/converter/convert.mjs && node --check packages/discovery/github.mjs && node --check packages/validator/validate.mjs && node --check ports/project-flow/scripts/project-flow.mjs",
     "security": "node scripts/security-scan.mjs",
     "licenses": "node scripts/license-audit.mjs",
     "build:web": "node scripts/build-web.mjs",
-    "verify": "npm run check && npm test && npm run security && npm run licenses && npm run build:web"
+    "runtime": "node scripts/runtime-verify.mjs",
+    "verify": "npm run check && npm test && npm run runtime && npm run security && npm run licenses && npm run build:web"
   }
 }
