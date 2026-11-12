@@ -1,0 +1,703 @@
+{
+  "schema_version": 1,
+  "benchmark": "phase-5-evidence-based-quality-benchmarks",
+  "generated_at": "2026-11-12T10:28:56.423Z",
+  "methodology": {
+    "identical_fixture_per_pair": true,
+    "baseline_skill_isolation": "temporary Git project with no .agents/skills and --ignore-user-config/--ignore-rules",
+    "assisted_activation": "only the named installed port is present and explicitly activated with $skill",
+    "hidden_criteria": "grader runs outside each temporary project and is never copied into the agent workspace",
+    "scoring": "deterministic fixture checks; artifacts are not scored for length or polish",
+    "paid_api_calls": "none; local Codex CLI only"
+  },
+  "environment": {
+    "node": "v24.21.0",
+    "platform": "win32",
+    "arch": "x64",
+    "codex": "codex-cli 0.159.2",
+    "model": "default-configured",
+    "configuration": [
+      "--ignore-user-config",
+      "--ignore-rules",
+      "--ephemeral",
+      "--approve-for-me (workspace-write implied)"
+    ],
+    "paid_api_calls": false
+  },
+  "trials_requested": 10,
+  "trials_completed": 10,
+  "pairs": [
+    {
+      "task": "architecture",
+      "skill": "architecture-designer",
+      "baseline_score": 7,
+      "assisted_score": 0,
+      "max_score": 7,
+      "score_delta": -7,
+      "baseline_elapsed_ms": 131794,
+      "assisted_elapsed_ms": 6714759,
+      "baseline_output_tokens": 2992,
+      "assisted_output_tokens": 0,
+      "baseline_skill_read": false,
+      "assisted_skill_read": true,
+      "baseline_valid": true,
+      "assisted_valid": false,
+      "comparison_status": "assisted-failed"
+    },
+    {
+      "task": "code-review",
+      "skill": "code-reviewer",
+      "baseline_score": 5,
+      "assisted_score": 4,
+      "max_score": 5,
+      "score_delta": -1,
+      "baseline_elapsed_ms": 58218,
+      "assisted_elapsed_ms": 69932,
+      "baseline_output_tokens": 1106,
+      "assisted_output_tokens": 1892,
+      "baseline_skill_read": false,
+      "assisted_skill_read": true,
+      "baseline_valid": true,
+      "assisted_valid": true,
+      "comparison_status": "valid-pair"
+    },
+    {
+      "task": "debugging",
+      "skill": "debugging-wizard",
+      "baseline_score": 4,
+      "assisted_score": 4,
+      "max_score": 4,
+      "score_delta": 0,
+      "baseline_elapsed_ms": 53901,
+      "assisted_elapsed_ms": 63082,
+      "baseline_output_tokens": 768,
+      "assisted_output_tokens": 1326,
+      "baseline_skill_read": false,
+      "assisted_skill_read": true,
+      "baseline_valid": true,
+      "assisted_valid": true,
+      "comparison_status": "valid-pair"
+    },
+    {
+      "task": "security",
+      "skill": "secure-code-guardian",
+      "baseline_score": 3,
+      "assisted_score": 4,
+      "max_score": 4,
+      "score_delta": 1,
+      "baseline_elapsed_ms": 62959,
+      "assisted_elapsed_ms": 75910,
+      "baseline_output_tokens": 1343,
+      "assisted_output_tokens": 1638,
+      "baseline_skill_read": false,
+      "assisted_skill_read": true,
+      "baseline_valid": true,
+      "assisted_valid": true,
+      "comparison_status": "valid-pair"
+    },
+    {
+      "task": "testing",
+      "skill": "test-master",
+      "baseline_score": 3,
+      "assisted_score": 4,
+      "max_score": 5,
+      "score_delta": 1,
+      "baseline_elapsed_ms": 68366,
+      "assisted_elapsed_ms": 64755,
+      "baseline_output_tokens": 1774,
+      "assisted_output_tokens": 1690,
+      "baseline_skill_read": false,
+      "assisted_skill_read": true,
+      "baseline_valid": true,
+      "assisted_valid": true,
+      "comparison_status": "valid-pair"
+    }
+  ],
+  "aggregate": {
+    "comparable_pairs": 4,
+    "improved": 2,
+    "regressed": 1,
+    "tied": 1,
+    "invalid_pairs": 1,
+    "mean_score_delta": 0.25,
+    "comparable_performance": {
+      "baseline_elapsed_ms": 243444,
+      "assisted_elapsed_ms": 273679,
+      "baseline_output_tokens": 4991,
+      "assisted_output_tokens": 6546,
+      "elapsed_delta_ms": 30235,
+      "output_token_delta": 1555
+    },
+    "conclusion": "mixed: improvements and regressions observed; no general improvement claim"
+  },
+  "trials": [
+    {
+      "task": "architecture",
+      "skill": "architecture-designer",
+      "condition": "baseline",
+      "repetition": 1,
+      "prompt_sha256": "6e88da3e55280b3863b609a5fd4f173d38eab90a67b9ca10c625e9fdd4d588c9",
+      "codex_exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 131794,
+      "command_count": 4,
+      "successful_command_count": 4,
+      "usage": {
+        "input_tokens": 94608,
+        "cached_input_tokens": 88448,
+        "output_tokens": 2992,
+        "reasoning_output_tokens": 35
+      },
+      "skill_read": false,
+      "baseline_skill_isolation": true,
+      "grade": {
+        "checks": [
+          {
+            "id": "architecture-artifact",
+            "pass": true,
+            "notes": "architecture artifact exists and is substantive"
+          },
+          {
+            "id": "components",
+            "pass": true,
+            "notes": "names the service components"
+          },
+          {
+            "id": "data-flow",
+            "pass": true,
+            "notes": "describes order data flow"
+          },
+          {
+            "id": "trade-offs",
+            "pass": true,
+            "notes": "records trade-offs"
+          },
+          {
+            "id": "failure-recovery",
+            "pass": true,
+            "notes": "covers failure and recovery"
+          },
+          {
+            "id": "idempotency-security",
+            "pass": true,
+            "notes": "addresses duplicate charges and security"
+          },
+          {
+            "id": "adr",
+            "pass": true,
+            "notes": "includes an architecture decision record"
+          }
+        ],
+        "score": 7,
+        "max": 7
+      },
+      "evidence": {
+        "artifact_files": [
+          "architecture.md"
+        ],
+        "private_trace_retained_locally": true
+      }
+    },
+    {
+      "task": "architecture",
+      "skill": "architecture-designer",
+      "condition": "assisted",
+      "repetition": 1,
+      "prompt_sha256": "b1c90c0857d931f15c159136c2e86148629d57eacf0d17d43fcfe3fd6d22a30f",
+      "codex_exit_code": null,
+      "timed_out": true,
+      "elapsed_ms": 6714759,
+      "command_count": 5,
+      "successful_command_count": 4,
+      "usage": {
+        "input_tokens": 0,
+        "cached_input_tokens": 0,
+        "output_tokens": 0,
+        "reasoning_output_tokens": 0
+      },
+      "skill_read": true,
+      "baseline_skill_isolation": null,
+      "grade": {
+        "checks": [
+          {
+            "id": "architecture-artifact",
+            "pass": false,
+            "notes": "architecture artifact exists and is substantive"
+          },
+          {
+            "id": "components",
+            "pass": false,
+            "notes": "names the service components"
+          },
+          {
+            "id": "data-flow",
+            "pass": false,
+            "notes": "describes order data flow"
+          },
+          {
+            "id": "trade-offs",
+            "pass": false,
+            "notes": "records trade-offs"
+          },
+          {
+            "id": "failure-recovery",
+            "pass": false,
+            "notes": "covers failure and recovery"
+          },
+          {
+            "id": "idempotency-security",
+            "pass": false,
+            "notes": "addresses duplicate charges and security"
+          },
+          {
+            "id": "adr",
+            "pass": false,
+            "notes": "includes an architecture decision record"
+          }
+        ],
+        "score": 0,
+        "max": 7
+      },
+      "evidence": {
+        "artifact_files": [],
+        "private_trace_retained_locally": true
+      }
+    },
+    {
+      "task": "code-review",
+      "skill": "code-reviewer",
+      "condition": "baseline",
+      "repetition": 1,
+      "prompt_sha256": "c603a7b288e84e63a909878e9446092dedfd266eed1723975640ab6fb9b98229",
+      "codex_exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 58218,
+      "command_count": 4,
+      "successful_command_count": 4,
+      "usage": {
+        "input_tokens": 90309,
+        "cached_input_tokens": 78720,
+        "output_tokens": 1106,
+        "reasoning_output_tokens": 34
+      },
+      "skill_read": false,
+      "baseline_skill_isolation": true,
+      "grade": {
+        "checks": [
+          {
+            "id": "review-artifact",
+            "pass": true,
+            "notes": "review artifact exists and is substantive"
+          },
+          {
+            "id": "coupon-range",
+            "pass": true,
+            "notes": "identifies the unchecked coupon range"
+          },
+          {
+            "id": "quantity-validation",
+            "pass": true,
+            "notes": "identifies invalid quantity handling"
+          },
+          {
+            "id": "prioritized-remediation",
+            "pass": true,
+            "notes": "prioritizes and remediates findings"
+          },
+          {
+            "id": "false-positive-control",
+            "pass": true,
+            "notes": "does not incorrectly report safeAdd as a defect"
+          }
+        ],
+        "score": 5,
+        "max": 5
+      },
+      "evidence": {
+        "artifact_files": [
+          "review.md"
+        ],
+        "private_trace_retained_locally": true
+      }
+    },
+    {
+      "task": "code-review",
+      "skill": "code-reviewer",
+      "condition": "assisted",
+      "repetition": 1,
+      "prompt_sha256": "988c71648cb11b585b6e9aa82be535285589230674c0066a442e32346f19bfec",
+      "codex_exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 69932,
+      "command_count": 5,
+      "successful_command_count": 5,
+      "usage": {
+        "input_tokens": 130752,
+        "cached_input_tokens": 86016,
+        "output_tokens": 1892,
+        "reasoning_output_tokens": 8
+      },
+      "skill_read": true,
+      "baseline_skill_isolation": null,
+      "grade": {
+        "checks": [
+          {
+            "id": "review-artifact",
+            "pass": true,
+            "notes": "review artifact exists and is substantive"
+          },
+          {
+            "id": "coupon-range",
+            "pass": true,
+            "notes": "identifies the unchecked coupon range"
+          },
+          {
+            "id": "quantity-validation",
+            "pass": true,
+            "notes": "identifies invalid quantity handling"
+          },
+          {
+            "id": "prioritized-remediation",
+            "pass": false,
+            "notes": "prioritizes and remediates findings"
+          },
+          {
+            "id": "false-positive-control",
+            "pass": true,
+            "notes": "does not incorrectly report safeAdd as a defect"
+          }
+        ],
+        "score": 4,
+        "max": 5
+      },
+      "evidence": {
+        "artifact_files": [
+          "review.md"
+        ],
+        "private_trace_retained_locally": true
+      }
+    },
+    {
+      "task": "debugging",
+      "skill": "debugging-wizard",
+      "condition": "baseline",
+      "repetition": 1,
+      "prompt_sha256": "11382ab4b05bf2960fa2acaac991e14abad8d337a738d23037d074fa56b9ce91",
+      "codex_exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 53901,
+      "command_count": 6,
+      "successful_command_count": 4,
+      "usage": {
+        "input_tokens": 93154,
+        "cached_input_tokens": 88704,
+        "output_tokens": 768,
+        "reasoning_output_tokens": 11
+      },
+      "skill_read": false,
+      "baseline_skill_isolation": true,
+      "grade": {
+        "checks": [
+          {
+            "id": "bug-fixed",
+            "pass": true,
+            "notes": "fixes both inclusive boundary comparisons"
+          },
+          {
+            "id": "regression-tests",
+            "pass": true,
+            "notes": "treats the medium boundary as medium (0.0837ms) ✔ keeps values below the medium boundary low (0.0622ms) ✔ keeps very high values high (0.0663ms) ℹ tests 4 ℹ suites 0 ℹ pass 4 ℹ fail 0 ℹ cancelled 0 ℹ skipped 0 ℹ todo 0 ℹ duration_ms 63.9153"
+          },
+          {
+            "id": "debug-artifact",
+            "pass": true,
+            "notes": "records evidence-based diagnosis and verification"
+          },
+          {
+            "id": "tests-unchanged",
+            "pass": true,
+            "notes": "leaves a substantive debugging record"
+          }
+        ],
+        "score": 4,
+        "max": 4
+      },
+      "evidence": {
+        "artifact_files": [
+          "debugging.md"
+        ],
+        "private_trace_retained_locally": true
+      }
+    },
+    {
+      "task": "debugging",
+      "skill": "debugging-wizard",
+      "condition": "assisted",
+      "repetition": 1,
+      "prompt_sha256": "b85edeceacaa11323e7fda940adc3ce3cbe64f8f20ddc7d0cdad54e49d8a3714",
+      "codex_exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 63082,
+      "command_count": 7,
+      "successful_command_count": 6,
+      "usage": {
+        "input_tokens": 122484,
+        "cached_input_tokens": 108160,
+        "output_tokens": 1326,
+        "reasoning_output_tokens": 20
+      },
+      "skill_read": true,
+      "baseline_skill_isolation": null,
+      "grade": {
+        "checks": [
+          {
+            "id": "bug-fixed",
+            "pass": true,
+            "notes": "fixes both inclusive boundary comparisons"
+          },
+          {
+            "id": "regression-tests",
+            "pass": true,
+            "notes": "ary medium (0.074ms) ✔ keeps values just above the medium boundary medium (0.0668ms) ✔ keeps values just above the high boundary high (0.0563ms) ℹ tests 7 ℹ suites 0 ℹ pass 7 ℹ fail 0 ℹ cancelled 0 ℹ skipped 0 ℹ todo 0 ℹ duration_ms 65.5571"
+          },
+          {
+            "id": "debug-artifact",
+            "pass": true,
+            "notes": "records evidence-based diagnosis and verification"
+          },
+          {
+            "id": "tests-unchanged",
+            "pass": true,
+            "notes": "leaves a substantive debugging record"
+          }
+        ],
+        "score": 4,
+        "max": 4
+      },
+      "evidence": {
+        "artifact_files": [
+          "debugging.md"
+        ],
+        "private_trace_retained_locally": true
+      }
+    },
+    {
+      "task": "security",
+      "skill": "secure-code-guardian",
+      "condition": "baseline",
+      "repetition": 1,
+      "prompt_sha256": "338adfaed65c2519904c262c7bf87b21806952aae002a93fd8746ed370f79588",
+      "codex_exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 62959,
+      "command_count": 6,
+      "successful_command_count": 5,
+      "usage": {
+        "input_tokens": 131425,
+        "cached_input_tokens": 116480,
+        "output_tokens": 1343,
+        "reasoning_output_tokens": 15
+      },
+      "skill_read": false,
+      "baseline_skill_isolation": true,
+      "grade": {
+        "checks": [
+          {
+            "id": "security-tests",
+            "pass": true,
+            "notes": "ive replacement (0.0908ms) ✔ preserves ordinary names and string conversion (0.0695ms) ✔ rejects non-exact and non-string admin roles (0.0755ms) ℹ tests 7 ℹ suites 0 ℹ pass 7 ℹ fail 0 ℹ cancelled 0 ℹ skipped 0 ℹ todo 0 ℹ duration_ms 64.8108"
+          },
+          {
+            "id": "escaping-implemented",
+            "pass": true,
+            "notes": "removes raw HTML interpolation"
+          },
+          {
+            "id": "authorization-boundary",
+            "pass": true,
+            "notes": "retains exact-role authorization"
+          },
+          {
+            "id": "security-artifact",
+            "pass": false,
+            "notes": "records vulnerability, impact, mitigation, and verification"
+          }
+        ],
+        "score": 3,
+        "max": 4
+      },
+      "evidence": {
+        "artifact_files": [
+          "security.md"
+        ],
+        "private_trace_retained_locally": true
+      }
+    },
+    {
+      "task": "security",
+      "skill": "secure-code-guardian",
+      "condition": "assisted",
+      "repetition": 1,
+      "prompt_sha256": "c6223a6a962bfb75957eb3da2bcd33681046be98d6e94a4a0abe9ef5aaa402b0",
+      "codex_exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 75910,
+      "command_count": 6,
+      "successful_command_count": 5,
+      "usage": {
+        "input_tokens": 180906,
+        "cached_input_tokens": 165632,
+        "output_tokens": 1638,
+        "reasoning_output_tokens": 16
+      },
+      "skill_read": true,
+      "baseline_skill_isolation": null,
+      "grade": {
+        "checks": [
+          {
+            "id": "security-tests",
+            "pass": true,
+            "notes": "nd quotes in user names (0.5202ms) ✔ does not grant admin access to a case variant (0.0845ms) ✔ grants access to the exact admin role (0.0618ms) ℹ tests 3 ℹ suites 0 ℹ pass 3 ℹ fail 0 ℹ cancelled 0 ℹ skipped 0 ℹ todo 0 ℹ duration_ms 58.9793"
+          },
+          {
+            "id": "escaping-implemented",
+            "pass": true,
+            "notes": "removes raw HTML interpolation"
+          },
+          {
+            "id": "authorization-boundary",
+            "pass": true,
+            "notes": "retains exact-role authorization"
+          },
+          {
+            "id": "security-artifact",
+            "pass": true,
+            "notes": "records vulnerability, impact, mitigation, and verification"
+          }
+        ],
+        "score": 4,
+        "max": 4
+      },
+      "evidence": {
+        "artifact_files": [
+          "security.md"
+        ],
+        "private_trace_retained_locally": true
+      }
+    },
+    {
+      "task": "testing",
+      "skill": "test-master",
+      "condition": "baseline",
+      "repetition": 1,
+      "prompt_sha256": "a8965eece1f1b932d65b6d7ee5a482d2d3691bc2f66aacfe8454f54c34565de0",
+      "codex_exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 68366,
+      "command_count": 5,
+      "successful_command_count": 5,
+      "usage": {
+        "input_tokens": 94812,
+        "cached_input_tokens": 91648,
+        "output_tokens": 1774,
+        "reasoning_output_tokens": 7
+      },
+      "skill_read": false,
+      "baseline_skill_isolation": true,
+      "grade": {
+        "checks": [
+          {
+            "id": "test-file",
+            "pass": true,
+            "notes": "test file exists and is substantive"
+          },
+          {
+            "id": "test-execution",
+            "pass": true,
+            "notes": "efix (0.0181ms) ✔ invalid suffix (0.0209ms) ✔ all whitespace (0.031ms) ✔ regressions (0.5944ms) ✔ repeated calls remain independent (0.1102ms) ℹ tests 64 ℹ suites 0 ℹ pass 64 ℹ fail 0 ℹ cancelled 0 ℹ skipped 0 ℹ todo 0 ℹ duration_ms 92.5938"
+          },
+          {
+            "id": "boundary-coverage",
+            "pass": false,
+            "notes": "contains boundary cases and 3 test cases"
+          },
+          {
+            "id": "invalid-inputs",
+            "pass": true,
+            "notes": "covers invalid input classes"
+          },
+          {
+            "id": "test-plan",
+            "pass": false,
+            "notes": "records test scope and result"
+          }
+        ],
+        "score": 3,
+        "max": 5
+      },
+      "evidence": {
+        "artifact_files": [
+          "test-plan.md"
+        ],
+        "private_trace_retained_locally": true
+      }
+    },
+    {
+      "task": "testing",
+      "skill": "test-master",
+      "condition": "assisted",
+      "repetition": 1,
+      "prompt_sha256": "5df2d0deb9f048d611e0ca6f87dc4bbe473c6f603923e431a61f38eb1e508834",
+      "codex_exit_code": 0,
+      "timed_out": false,
+      "elapsed_ms": 64755,
+      "command_count": 8,
+      "successful_command_count": 8,
+      "usage": {
+        "input_tokens": 115411,
+        "cached_input_tokens": 81408,
+        "output_tokens": 1690,
+        "reasoning_output_tokens": 0
+      },
+      "skill_read": true,
+      "baseline_skill_isolation": null,
+      "grade": {
+        "checks": [
+          {
+            "id": "test-file",
+            "pass": true,
+            "notes": "test file exists and is substantive"
+          },
+          {
+            "id": "test-execution",
+            "pass": true,
+            "notes": "erminators in \"ab-cd\" (0.0152ms) ✔ returns consistent results across repeated valid and invalid calls (0.4922ms) ✔ validateUsername (5.4955ms) ℹ tests 61 ℹ suites 1 ℹ pass 61 ℹ fail 0 ℹ cancelled 0 ℹ skipped 0 ℹ todo 0 ℹ duration_ms 75.6743"
+          },
+          {
+            "id": "boundary-coverage",
+            "pass": true,
+            "notes": "contains boundary cases and 6 test cases"
+          },
+          {
+            "id": "invalid-inputs",
+            "pass": true,
+            "notes": "covers invalid input classes"
+          },
+          {
+            "id": "test-plan",
+            "pass": false,
+            "notes": "records test scope and result"
+          }
+        ],
+        "score": 4,
+        "max": 5
+      },
+      "evidence": {
+        "artifact_files": [
+          "test-plan.md"
+        ],
+        "private_trace_retained_locally": true
+      }
+    }
+  ]
+}
