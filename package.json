@@ -8,14 +8,16 @@
   "bin": { "codex-forge": "./packages/cli/cli.mjs" },
   "scripts": {
     "test": "node --test tests/*.test.mjs",
-    "check": "node --check packages/cli/cli.mjs && node --check packages/installer/install.mjs && node --check packages/converter/convert.mjs && node --check packages/converter/batch.mjs && node --check packages/discovery/github.mjs && node --check packages/validator/validate.mjs && node --check ports/project-flow/scripts/project-flow.mjs && node --check scripts/codex-session-verify.mjs && node --check scripts/codex-multiskill-verify.mjs && node --check scripts/convert-jeffallan.mjs && node --check scripts/promote-jeffallan.mjs && node --check benchmarks/tasks.mjs && node --check scripts/benchmark-skills.mjs",
+    "check": "node --check packages/cli/cli.mjs && node --check packages/installer/install.mjs && node --check packages/converter/convert.mjs && node --check packages/converter/batch.mjs && node --check packages/discovery/github.mjs && node --check packages/validator/validate.mjs && node --check ports/project-flow/scripts/project-flow.mjs && node --check scripts/codex-session-verify.mjs && node --check scripts/codex-multiskill-verify.mjs && node --check scripts/convert-jeffallan.mjs && node --check scripts/promote-jeffallan.mjs && node --check packages/evaluation/process.mjs && node --check benchmarks/tasks.mjs && node --check scripts/benchmark-skills.mjs",
     "security": "node scripts/security-scan.mjs",
     "licenses": "node scripts/license-audit.mjs",
     "build:web": "node scripts/build-web.mjs",
     "runtime": "node scripts/runtime-verify.mjs",
     "codex-runtime": "node scripts/codex-session-verify.mjs",
     "codex-multiskill-runtime": "node scripts/codex-multiskill-verify.mjs",
-    "benchmark:skills": "node scripts/benchmark-skills.mjs",
+    "benchmark:skills": "node scripts/benchmark-skills.mjs --mode smoke",
+    "benchmark:skills:full": "node scripts/benchmark-skills.mjs --mode full",
+    "benchmark:skills:resume": "node scripts/benchmark-skills.mjs --mode full --resume",
     "verify": "npm run check && npm test && npm run runtime && npm run security && npm run licenses && npm run build:web"
   }
 }

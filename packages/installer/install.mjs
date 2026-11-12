@@ -73,6 +73,7 @@ export function validateManifest(portDir) {
   if (manifest.license_status !== 'cleared') throw new Error('port license is not cleared');
   if (typeof manifest.license !== 'string' || !manifest.license.trim()) throw new Error('manifest license is required');
   if (!Array.isArray(manifest.dependencies) || manifest.dependencies.length) throw new Error('unsupported upstream dependencies are present');
+  if (manifest.hooks && (!Array.isArray(manifest.hooks) || manifest.hooks.length)) throw new Error('unapproved executable hooks are not supported');
   if (!manifest.files || typeof manifest.files !== 'object') throw new Error('manifest files are missing');
   if (manifest.files['PORT.json']) throw new Error('PORT.json must not hash itself');
   if (!manifest.source || typeof manifest.source !== 'object' || Array.isArray(manifest.source)) throw new Error('manifest source metadata is required');
@@ -85,6 +86,8 @@ export function validateManifest(portDir) {
   const expectedFiles = new Set(['PORT.json']);
   for (const [relative, expectedHash] of Object.entries(manifest.files)) {
     if (!safeRelative(relative)) throw new Error(`unsafe manifest path: ${relative}`);
+    const pathParts = relative.replaceAll('\\', '/').split('/');
+    if (pathParts.includes('.git') || pathParts.includes('hooks') || ['.exe', '.bat', '.cmd', '.ps1', '.dll', '.so', '.dylib'].includes(path.extname(relative).toLowerCase())) throw new Error(`unapproved executable or hook path: ${relative}`);
     const file = path.resolve(root, relative);
     if (!file.startsWith(`${root}${path.sep}`) || !lstatOrNull(file)?.isFile()) throw new Error(`manifest file missing or not regular: ${relative}`);
     if (lstatOrNull(file).isSymbolicLink()) throw new Error(`manifest file must not be a symbolic link: ${relative}`);

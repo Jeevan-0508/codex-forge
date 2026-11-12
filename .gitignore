@@ -1,4 +1,6 @@
 node_modules/
+.phase-6-checkpoint.json
+benchmarks/results/.phase-6-checkpoint.json
 .tmp/
 .codex-forge-cache/
 apps/web/catalog.json

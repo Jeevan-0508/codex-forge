@@ -26,7 +26,11 @@ fetch('ports.json').then((r) => r.json()).then((ports) => {
 fetch('evidence.json').then((r) => r.json()).then((evidence) => {
   const aggregate = evidence.aggregate || {};
   const status = aggregate.conclusion || 'unavailable';
-  evidenceSummaryEl.innerHTML = `<p><b>${escapeHtml(status)}</b></p><p>${escapeHtml(evidence.trials_completed || 0)} completed trials · ${escapeHtml(aggregate.improved || 0)} improved · ${escapeHtml(aggregate.tied || 0)} tied · ${escapeHtml(aggregate.regressed || 0)} regressed.</p><p>Runtime compatibility, functional correctness, and quality improvement are separate signals. This page reports deterministic fixture checks only.</p>`;
+  const timeouts = (evidence.trials || []).filter((trial) => trial.timed_out).length;
+  const repetitions = evidence.repetitions_requested || 1;
+  const performance = aggregate.comparable_performance || {};
+  const resultPath = evidence.mode === 'full' ? 'benchmarks/results/phase-6-latest.json' : evidence.benchmark?.includes('phase-6') ? 'benchmarks/results/phase-6-latest.json' : 'benchmarks/results/phase-5-latest.json';
+  evidenceSummaryEl.innerHTML = `<p><b>${escapeHtml(status)}</b></p><p>${escapeHtml(evidence.trials_completed || 0)} completed trials · ${escapeHtml(repetitions)} repetition(s) · ${escapeHtml(aggregate.comparable_pairs || 0)} valid pairs · ${escapeHtml(aggregate.invalid_pairs || 0)} invalid pairs.</p><p>${escapeHtml(aggregate.improved || 0)} improved · ${escapeHtml(aggregate.tied || 0)} tied · ${escapeHtml(aggregate.regressed || 0)} regressed · ${escapeHtml(timeouts)} timed out.</p><p>Comparable latency: ${escapeHtml(performance.baseline_elapsed_ms || '—')}ms baseline vs ${escapeHtml(performance.assisted_elapsed_ms || '—')}ms assisted. Output tokens: ${escapeHtml(performance.baseline_output_tokens || '—')} vs ${escapeHtml(performance.assisted_output_tokens || '—')}.</p><p>Runtime compatibility, functional correctness, and quality improvement are separate signals. <a href="https://github.com/Jeevan-0508/codex-forge/blob/main/benchmarks/README.md">Methodology</a> · <a href="https://github.com/Jeevan-0508/codex-forge/blob/main/${resultPath}">Raw evidence</a>.</p>`;
   evidenceListEl.innerHTML = (evidence.pairs || []).map((pair) => {
     const valid = pair.comparison_status === 'valid-pair';
     const label = !valid ? `Excluded: ${pair.comparison_status}` : pair.score_delta > 0 ? 'Improved' : pair.score_delta < 0 ? 'Regressed' : 'Tied';

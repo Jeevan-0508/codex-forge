@@ -34,6 +34,10 @@ Senior engineer conducting thorough, constructive code reviews that improve qual
 4. **Tests** — Validate test coverage and quality. Ask: Are edge cases covered? Do tests assert behavior, not implementation?
 5. **Feedback** — Produce a categorized report using the Output Template. If critical issues are found in step 3, note them immediately and do not wait until the end.
 
+## Evidence-first review standard
+
+Every finding must be tied to a precise file, line range, function, or reproducible behavior. State the concrete defect, severity, user or system impact, and an actionable remediation. Separate confirmed defects from risks that require more context. Explicitly record safe code and avoid false positives: do not report style preferences, already-validated inputs, or hypothetical vulnerabilities without evidence. Test boundary cases when practical and report what was actually checked.
+
 > **Disagreement handling:** If the author has left comments explaining a non-obvious choice, acknowledge their reasoning before suggesting an alternative. Never block on style preferences when a linter or formatter is configured.
 
 ## Reference Guide
@@ -50,6 +54,8 @@ Load detailed guidance based on context:
 | Report Template | `references/report-template.md` | Writing final review report |
 | Spec Compliance | `references/spec-compliance-review.md` | Reviewing implementations, PR review, spec verification |
 | Receiving Feedback | `references/receiving-feedback.md` | Responding to review comments, handling feedback |
+
+Read only the references needed for the current review. Start with `review-checklist.md` and `report-template.md`; add a topic reference only when the code requires it. Do not load every reference by default.
 
 ## Review Patterns (Quick Reference)
 
