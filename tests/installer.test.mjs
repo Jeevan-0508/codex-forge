@@ -49,6 +49,22 @@ test('installer rejects traversal and unsupported upstream dependencies', () => 
   assert.throws(() => validateManifest(copied), /unsupported upstream dependencies/);
 });
 
+test('installer rejects executable hooks and unsafe hook paths', () => {
+  const copied = copyPort();
+  const manifestPath = path.join(copied, 'PORT.json');
+  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  manifest.hooks = ['post-install'];
+  fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
+  assert.throws(() => validateManifest(copied), /unapproved executable hooks/);
+
+  const withHookPath = copyPort();
+  const hookManifestPath = path.join(withHookPath, 'PORT.json');
+  const hookManifest = JSON.parse(fs.readFileSync(hookManifestPath, 'utf8'));
+  hookManifest.files['hooks/post-install.ps1'] = '0'.repeat(64);
+  fs.writeFileSync(hookManifestPath, JSON.stringify(hookManifest, null, 2));
+  assert.throws(() => validateManifest(withHookPath), /unapproved executable or hook path/);
+});
+
 test('installer rejects tampered files and unsafe manifest paths', () => {
   const copied = copyPort();
   fs.appendFileSync(path.join(copied, 'SKILL.md'), '\nTampered.\n');
