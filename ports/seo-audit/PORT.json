@@ -1,0 +1,31 @@
+{
+  "manifest_version": 1,
+  "install_contract": "codex-forge-v1",
+  "id": "seo-audit",
+  "version": "0.1.0",
+  "runtime": "codex",
+  "entrypoint": "SKILL.md",
+  "verification_status": "runtime-verified",
+  "verification": {
+    "harness": "passed",
+    "real_codex_session": "passed"
+  },
+  "license_status": "cleared",
+  "license": "MIT",
+  "dependencies": [],
+  "source": {
+    "repository": "AgriciDaniel/claude-seo",
+    "url": "https://github.com/AgriciDaniel/claude-seo",
+    "revision": "cca7e4a267991aca880efade1fd12e8498caf2ce",
+    "original_license": "MIT",
+    "attribution": "Daniel Agrici",
+    "copied_upstream_files": false
+  },
+  "files": {
+    "LICENSE.txt": "a42b3b0253cecea9af810c5207a67b0be8c9a0cfbf52b9302c3d26b063e7a86b",
+    "NOTICE.md": "84a203677e62f4f2f321fe1c77053296a20b9aa8299f13a8c7fba40dd90aa2a8",
+    "README.md": "e0851994b2fccdb1e85f0e850f697551f5b400a77a1b03d559830fd491e8a2c5",
+    "scripts/seo-audit.mjs": "30a5efc3b81dc2572be5852c806f8d55b4f31920651c096061b1f2c04e5810b4",
+    "SKILL.md": "3fd0f6aef8a635457afe0bcfcb527ab18adaeaaebd43a8b7e292699f92a3d3de"
+  }
+}

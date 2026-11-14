@@ -51,7 +51,7 @@ function safeBackupToken(token) {
   return token;
 }
 
-export function validateManifest(portDir) {
+export function validateManifest(portDir, { allowHarness = false } = {}) {
   const root = path.resolve(portDir);
   assertDirectory(root, 'port root');
   const manifestPath = path.join(root, 'PORT.json');
@@ -69,7 +69,7 @@ export function validateManifest(portDir) {
   if (manifest.install_contract !== 'codex-forge-v1') throw new Error('unsupported install contract');
   if (manifest.runtime !== 'codex') throw new Error('port runtime must be codex');
   if (typeof manifest.entrypoint !== 'string' || !safeRelative(manifest.entrypoint)) throw new Error('manifest entrypoint is required and must be relative');
-  if (manifest.verification_status !== 'runtime-verified') throw new Error('port is not runtime-verified');
+  if (manifest.verification_status !== 'runtime-verified' && !(allowHarness && manifest.verification_status === 'harness-verified')) throw new Error('port is not runtime-verified');
   if (manifest.license_status !== 'cleared') throw new Error('port license is not cleared');
   if (typeof manifest.license !== 'string' || !manifest.license.trim()) throw new Error('manifest license is required');
   if (!Array.isArray(manifest.dependencies) || manifest.dependencies.length) throw new Error('unsupported upstream dependencies are present');
@@ -110,8 +110,8 @@ function targetFor(root, id) {
   return { resolvedRoot, target };
 }
 
-export function installPort(portDir, { skillRoot = DEFAULT_SKILL_ROOT, dryRun = false, approveOverwrite = false, failAfterCopy = false, backupToken = crypto.randomUUID() } = {}) {
-  const initialManifest = validateManifest(portDir);
+export function installPort(portDir, { skillRoot = DEFAULT_SKILL_ROOT, dryRun = false, approveOverwrite = false, failAfterCopy = false, backupToken = crypto.randomUUID(), allowHarness = false } = {}) {
+  const initialManifest = validateManifest(portDir, { allowHarness });
   const initialManifestBytes = fs.readFileSync(initialManifest._manifestPath, 'utf8');
   const manifest = initialManifest;
   const { resolvedRoot, target } = targetFor(skillRoot, manifest.id);
@@ -134,7 +134,7 @@ export function installPort(portDir, { skillRoot = DEFAULT_SKILL_ROOT, dryRun = 
   const staging = path.join(resolvedRoot, `.${manifest.id}.codex-forge-stage-${crypto.randomUUID()}`);
   let backedUp = false;
   try {
-    const refreshedManifest = validateManifest(portDir);
+    const refreshedManifest = validateManifest(portDir, { allowHarness });
     const refreshedBytes = fs.readFileSync(refreshedManifest._manifestPath, 'utf8');
     if (refreshedBytes !== initialManifestBytes) throw new Error('port changed after initial validation; refusing installation');
     fs.mkdirSync(staging, { recursive: true });

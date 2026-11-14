@@ -1,0 +1,24 @@
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+import { installPort } from '../packages/installer/install.mjs';
+import { runProcessTree, classifyProcessResult } from '../packages/evaluation/process.mjs';
+
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const temp = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-forge-phase7-runtime-'));
+const project = path.join(temp, 'project');
+fs.mkdirSync(path.join(project, 'site'), { recursive: true });
+fs.writeFileSync(path.join(project, 'site', 'index.html'), '<html><head><title>Runtime fixture</title></head><body><h1>Fixture</h1><img src="logo.png"></body></html>\n');
+fs.writeFileSync(path.join(project, 'AGENTS.md'), 'Use installed skills only when explicitly named by the task.\n');
+spawnSync('git', ['init'], { cwd: project, windowsHide: true });
+for (const id of ['seo-audit', 'game-prototype']) installPort(path.join(root, 'ports', id), { skillRoot: path.join(project, '.agents', 'skills'), allowHarness: true });
+const lastMessage = path.join(temp, 'last-message.txt');
+const prompt = 'Use $seo-audit and $game-prototype explicitly. Read both installed SKILL.md files. Run the SEO audit on site/index.html and write artifacts/seo-report.json and artifacts/seo-report.md. Then initialize a browser game at artifacts/game with title "Runtime Runner" and genre "arcade", run its checker, and write artifacts/game-check.json. Do not use the network, package managers, MCP servers, credentials, or paid services.';
+const result = await runProcessTree('codex', ['exec', '--json', '--approve-for-me', '--ephemeral', '--ignore-user-config', '--ignore-rules', '--cd', project, '--output-last-message', lastMessage, prompt], { cwd: project, timeoutMs: Number(process.env.CODEX_SESSION_TIMEOUT_MS || 600000) });
+const files = ['artifacts/seo-report.json', 'artifacts/seo-report.md', 'artifacts/game/game.json', 'artifacts/game/index.html', 'artifacts/game-check.json'];
+const artifacts = Object.fromEntries(files.map((file) => [file, fs.existsSync(path.join(project, file)) && fs.statSync(path.join(project, file)).size > 0]));
+const output = { verification: result.exitCode === 0 && Object.values(artifacts).every(Boolean) ? 'real-codex-session-verified' : 'harness-only', exit_reason: classifyProcessResult(result), exit_code: result.exitCode, timed_out: result.timedOut, elapsed_ms: result.elapsedMs, artifacts, evidence_directory: temp };
+console.log(JSON.stringify(output, null, 2));
+if (output.verification !== 'real-codex-session-verified') process.exitCode = 1;

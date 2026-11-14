@@ -14,7 +14,7 @@ test('CLI exposes verified port catalog and inspection', async () => {
   const listed = logger();
   await run(['port', 'list'], listed.io);
   const ports = JSON.parse(listed.output[0]);
-  assert.equal(ports.length, 6);
+  assert.equal(ports.length, 8);
   assert.ok(ports.some((port) => port.id === 'jeffallan-code-reviewer'));
 
   const inspected = logger();

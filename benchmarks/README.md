@@ -28,3 +28,13 @@ Condition order is randomized deterministically from `CODEX_BENCHMARK_SEED`. Eve
 The command uses the local Codex CLI with `--ignore-user-config`, `--ignore-rules`, `--ephemeral`, and an isolated workspace. It does not use API keys, MCP servers, network access, package installation, or paid API calls. Phase 6 results are written to `benchmarks/results/phase-6-latest.json`; they are not published until a completed evaluation is explicitly reviewed.
 
 Compatibility and execution are separate from quality. A port can be runtime-verified while its benchmark result is tied, negative, invalid, or unavailable. This suite is a controlled signal, not a claim of general model improvement. Hidden grading criteria are loaded by the harness and are never copied into the Codex workspace.
+
+## Phase 7 functional-port smoke
+
+The Phase 7 smoke benchmark applies the same paired design to two new ports: `seo-audit` and `game-prototype`. It uses fresh local fixtures, no network, no package installation, and independent artifact checks for the JSON/Markdown SEO receipt and the browser-game manifest/entrypoint/check receipt:
+
+```powershell
+npm run benchmark:phase7
+```
+
+This is four trials (two baseline and two assisted) and is intentionally not a full evaluation. The published result is `benchmarks/results/phase-7-latest.json`; its conclusion is limited to these fixtures and explicitly avoids a generalized improvement claim.
