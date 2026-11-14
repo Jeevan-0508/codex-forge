@@ -1,0 +1,31 @@
+{
+  "manifest_version": 1,
+  "install_contract": "codex-forge-v1",
+  "id": "game-prototype",
+  "version": "0.1.0",
+  "runtime": "codex",
+  "entrypoint": "SKILL.md",
+  "verification_status": "runtime-verified",
+  "verification": {
+    "harness": "passed",
+    "real_codex_session": "passed"
+  },
+  "license_status": "cleared",
+  "license": "MIT",
+  "dependencies": [],
+  "source": {
+    "repository": "Donchitos/Claude-Code-Game-Studios",
+    "url": "https://github.com/Donchitos/Claude-Code-Game-Studios",
+    "revision": "abc0de79d6ceb0b5d7aa693945849b3937afbe6a",
+    "original_license": "MIT",
+    "attribution": "Donchitos",
+    "copied_upstream_files": false
+  },
+  "files": {
+    "LICENSE.txt": "6ecc068715c0edffc4bc21e5dca450803e0a45af145f72221da23d14e7588359",
+    "NOTICE.md": "d4aee43a4223914572335277d1caf4af408610431e6d52a9999b72b7f4aecbad",
+    "README.md": "8a8278cb3eec9abdb01ab1e2eb5566f7cc140f4e403307ab316dfdb942ec6051",
+    "scripts/game-prototype.mjs": "9f203fb145d5506c62675ec41c03e3c624830d7e48c90d89512002c3553f6d55",
+    "SKILL.md": "92dad085de00c7c6b1cd7849b24b3dcba2e57108400f732aff13b10df4100700"
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "schema_version": 1,
+  "benchmark": "phase-7-functional-port-smoke",
+  "generated_at": "2026-11-14T07:42:54.182Z",
+  "mode": "smoke",
+  "methodology": {
+    "paired_conditions": "same fixture and requirements; assisted condition explicitly activates only the named port",
+    "hidden_grading": "independent artifact checks in phase7-tasks.mjs",
+    "network": false,
+    "paid_api_calls": false
+  },
+  "environment": {
+    "node": "v24.21.0",
+    "platform": "win32",
+    "arch": "x64",
+    "codex": "codex-cli 0.159.2",
+    "model_requested": null,
+    "model_observed": null
+  },
+  "trials_completed": 4,
+  "trials": [
+    {
+      "task": "seo-local-audit",
+      "skill": "seo-audit",
+      "condition": "baseline",
+      "prompt_sha256": "62333f6234685f3627221e189b7e5048371a62e55a9f1ed4e3fe2d1c4c8c21fb",
+      "valid": true,
+      "skill_read": false,
+      "grade": {
+        "score": 1,
+        "max": 3,
+        "criteria": [
+          "report-json",
+          "expected-findings",
+          "markdown-report"
+        ]
+      },
+      "exit_reason": "success",
+      "timed_out": false,
+      "exit_code": 0,
+      "elapsed_ms": 75957,
+      "usage": {
+        "input_tokens": 72945,
+        "cached_input_tokens": 59776,
+        "output_tokens": 2399,
+        "reasoning_output_tokens": 135
+      },
+      "model_observed": null,
+      "artifact_files": [
+        "seo-report.json",
+        "seo-report.md"
+      ]
+    },
+    {
+      "task": "seo-local-audit",
+      "skill": "seo-audit",
+      "condition": "assisted",
+      "prompt_sha256": "0de456f81af374b110dbb45364ce7e61eb4d2517864b2371909870680e9cf214",
+      "valid": true,
+      "skill_read": true,
+      "grade": {
+        "score": 3,
+        "max": 3,
+        "criteria": [
+          "report-json",
+          "expected-findings",
+          "markdown-report"
+        ]
+      },
+      "exit_reason": "success",
+      "timed_out": false,
+      "exit_code": 0,
+      "elapsed_ms": 33586,
+      "usage": {
+        "input_tokens": 68688,
+        "cached_input_tokens": 62464,
+        "output_tokens": 449,
+        "reasoning_output_tokens": 0
+      },
+      "model_observed": null,
+      "artifact_files": [
+        "seo-report.json",
+        "seo-report.md"
+      ]
+    },
+    {
+      "task": "browser-game-slice",
+      "skill": "game-prototype",
+      "condition": "baseline",
+      "prompt_sha256": "8b4f9c8694300a696f93dfdb71bf1b8358e478aa4105b6e4627b011439eefd26",
+      "valid": true,
+      "skill_read": false,
+      "grade": {
+        "score": 2,
+        "max": 3,
+        "criteria": [
+          "manifest",
+          "browser-entrypoint",
+          "passing-check"
+        ]
+      },
+      "exit_reason": "success",
+      "timed_out": false,
+      "exit_code": 0,
+      "elapsed_ms": 119055,
+      "usage": {
+        "input_tokens": 91114,
+        "cached_input_tokens": 76672,
+        "output_tokens": 4817,
+        "reasoning_output_tokens": 27
+      },
+      "model_observed": null,
+      "artifact_files": [
+        "game",
+        "game-check.json"
+      ]
+    },
+    {
+      "task": "browser-game-slice",
+      "skill": "game-prototype",
+      "condition": "assisted",
+      "prompt_sha256": "af3eaf6b6efdcb20b9e8895ffe495ece70af0f9e3d0fae473ded457aeab6b454",
+      "valid": true,
+      "skill_read": true,
+      "grade": {
+        "score": 3,
+        "max": 3,
+        "criteria": [
+          "manifest",
+          "browser-entrypoint",
+          "passing-check"
+        ]
+      },
+      "exit_reason": "success",
+      "timed_out": false,
+      "exit_code": 0,
+      "elapsed_ms": 69530,
+      "usage": {
+        "input_tokens": 68293,
+        "cached_input_tokens": 62592,
+        "output_tokens": 1839,
+        "reasoning_output_tokens": 15
+      },
+      "model_observed": null,
+      "artifact_files": [
+        "game",
+        "game-check.json"
+      ]
+    }
+  ],
+  "pairs": [
+    {
+      "task": "seo-local-audit",
+      "skill": "seo-audit",
+      "comparison_status": "valid-pair",
+      "baseline_score": 1,
+      "assisted_score": 3,
+      "max_score": 3,
+      "score_delta": 2,
+      "baseline_elapsed_ms": 75957,
+      "assisted_elapsed_ms": 33586,
+      "baseline_output_tokens": 2399,
+      "assisted_output_tokens": 449
+    },
+    {
+      "task": "browser-game-slice",
+      "skill": "game-prototype",
+      "comparison_status": "valid-pair",
+      "baseline_score": 2,
+      "assisted_score": 3,
+      "max_score": 3,
+      "score_delta": 1,
+      "baseline_elapsed_ms": 119055,
+      "assisted_elapsed_ms": 69530,
+      "baseline_output_tokens": 4817,
+      "assisted_output_tokens": 1839
+    }
+  ],
+  "aggregate": {
+    "comparable_pairs": 2,
+    "improved": 2,
+    "tied": 0,
+    "regressed": 0,
+    "invalid_pairs": 0,
+    "conclusion": "limited improvement observed; repeat before generalizing"
+  }
+}
