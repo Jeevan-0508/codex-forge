@@ -1,90 +1,110 @@
 # CODEX//FORGE
 
-**Claude-first tools. Codex-native experiences.**
+**Verified Claude-first workflows for Codex developers.**
 
-CODEX//FORGE is a development-stage toolkit for discovering Claude Code projects, assessing portability and licensing evidence, converting safe Markdown skills into Codex Agent Skills, and validating the generated output.
+CODEX//FORGE audits Claude-first projects, preserves their licensing evidence, and publishes small Codex-native ports that can be installed, exercised, and uninstalled safely. It is designed for developers who want useful workflows—not a larger catalog for its own sake.
 
-Live catalog: [jeevan-0508.github.io/codex-forge](https://jeevan-0508.github.io/codex-forge/)
+[Live catalog](https://jeevan-0508.github.io/codex-forge/) · [Quick start](QUICKSTART.md) · [Demos](demos/README.md) · [Security](SECURITY.md)
 
-## What works now
+## In two minutes
 
-- Local catalog with eight metadata-backed seed projects from GitHub.
-- GitHub repository discovery with pagination, optional token auth, and no cloning or execution.
-- Compatibility classes A–F with explicit confidence and license evidence.
-- Safe Markdown skill conversion with dry-run mode and conversion records.
-- Validation for frontmatter, suspicious installer pipelines, and common credential patterns.
-- Searchable static GitHub Pages catalog.
-- Six runtime-verified Codex ports: `project-flow` plus five individually installable Jeff Allan skills (deterministic harness and real `codex exec` session verified).
-- Phase 5 evidence benchmarks compare baseline Codex with explicitly activated skills on identical isolated fixtures; results distinguish valid quality comparisons from activation failures and timeouts.
-- Phase 6 adds bounded cross-platform process-tree cancellation, smoke/full evaluation modes, randomized paired order, checkpoint/resume, diverse fixtures, and a quick-start port workflow.
-- Deterministic Node test suite, isolated runtime harness, CI, security scan, license gate, and weekly upstream-report workflow.
-
-CCPM was audited first. It already supports Codex through the Agent Skills format, so CODEX//FORGE does not duplicate it. The first independent port is `project-flow`, which provides a smaller Codex-native project workflow without copying CCPM or its source files.
-
-## CLI
-
-Requires Node.js 20+ and has no npm runtime dependencies.
+Requirements: Node.js 20+, Git, and a working Codex CLI session for real skill discovery. No npm runtime dependencies are required.
 
 ```powershell
-node packages/cli/cli.mjs search memory
-node packages/cli/cli.mjs inspect claude-mem
-node packages/cli/cli.mjs compatibility claude-mem
-node packages/cli/cli.mjs discover "claude code skills" --pages 2
-node packages/cli/cli.mjs convert fixtures/sample-claude-skill --out .tmp/sample-port --dry-run
-node packages/cli/cli.mjs convert fixtures/sample-claude-skill --out .tmp/sample-port
-node packages/cli/cli.mjs validate .tmp/sample-port
-node packages/cli/cli.mjs install project-flow --dry-run
-node packages/cli/cli.mjs install project-flow
-node packages/cli/cli.mjs uninstall project-flow --dry-run
-node packages/cli/cli.mjs uninstall project-flow --approve
+git clone https://github.com/Jeevan-0508/codex-forge.git
+cd codex-forge
+node packages/cli/cli.mjs port list
+node packages/cli/cli.mjs port inspect seo-audit
+node packages/cli/cli.mjs port install seo-audit --dry-run
+node packages/cli/cli.mjs port install seo-audit
 ```
 
-`install` refuses every entry that is not marked `runtime-verified`, has a valid manifest, and has matching SHA-256 hashes. It installs only into the documented Codex skill root, `~/.agents/skills` (or `CODEX_SKILL_ROOT` for isolated testing). Existing installations require `--approve-overwrite` and are moved to a backup first. `uninstall` also creates a recoverable backup. Both support dry runs; a failed replacement rolls back.
-
-## Install a verified port
-
-`project-flow` is discovered by Codex through its installed `SKILL.md` and runs with Node.js 20+:
+Start a new Codex session, then ask it to use `$seo-audit` on `demos/seo-audit/index.html`. The deterministic report is written by the installed local script; no site data is uploaded. Remove it when finished:
 
 ```powershell
-node packages/cli/cli.mjs install project-flow --dry-run
-node packages/cli/cli.mjs install project-flow --approve-overwrite
-node "$HOME/.agents/skills/project-flow/scripts/project-flow.mjs" plan --slug checkout --title "Checkout" --requirements "Track the checkout work safely."
+node packages/cli/cli.mjs port uninstall seo-audit --approve
 ```
 
-The workflow keeps local state in `.codex-forge/projects/<slug>/`, requires explicit `--passed` evidence to complete a task, and defaults GitHub Issue and worktree operations to dry-run. Passing `--approve` is required for those external writes.
+For a complete clean-environment measurement, run `npm run onboarding:acceptance`. It uses a temporary skill root and reports the elapsed time.
 
-Verification statuses are separate: `harness` means the local deterministic runner passed; `real_codex_session` means an installed Codex CLI session discovered the skill and exercised its workflow.
+## What is published
 
-## Compatibility classes
+| Port | Capability | Verification | Dependencies |
+| --- | --- | --- | --- |
+| `project-flow` | PRDs, task decomposition, acceptance evidence, guarded worktrees | Real Codex session | None |
+| `jeffallan-architecture-designer` | Architecture and ADR guidance | Real Codex session | None |
+| `jeffallan-code-reviewer` | Evidence-first code review | Real Codex session | None |
+| `jeffallan-debugging-wizard` | Hypothesis-driven debugging | Real Codex session | None |
+| `jeffallan-secure-code-guardian` | Secure coding review | Real Codex session | None |
+| `jeffallan-test-master` | Test planning and quality gates | Real Codex session | None |
+| `seo-audit` | Local HTML SEO evidence | Real Codex session | None |
+| `game-prototype` | Browser-game vertical slice and checker | Real Codex session | None |
 
-| Class | Meaning |
-|---|---|
-| A | Claude-exclusive capability that is portable to Codex |
-| B | Partially portable; an adapter or limitation is required |
-| C | Already Codex-compatible; avoid an unnecessary fork |
-| D | Claude-dependent or unavailable in Codex |
-| E | License-restricted until permission/evidence is resolved |
-| F | Unverified or unsafe |
+All eight ports are hash-validated and install only into Codex’s documented `~/.agents/skills` directory. Existing installations are backed up and never overwritten without approval. See the [website](https://jeevan-0508.github.io/codex-forge/) for filters, limitations, examples, and exact commands.
 
-## Development
+## How it works
+
+```mermaid
+flowchart LR
+  A[Claude-first repository] --> B[Audit source, revision, license]
+  B --> C[Independent Codex adapter]
+  C --> D[Manifest and SHA-256 validation]
+  D --> E[Harness and real Codex verification]
+  E --> F[Installable port]
+  F --> G[Local workflow and acceptance evidence]
+```
+
+Discovery never clones or executes upstream code. A port is installable only when its manifest, regular-file tree, hashes, license metadata, and runtime verification pass. External writes, credentials, MCP servers, package installation, and paid services are outside the default workflow.
+
+## CLI reference
+
+Run from a clone of this repository; no global installation is needed.
+
+```sh
+# Discover and inspect
+node packages/cli/cli.mjs port list
+node packages/cli/cli.mjs port search security
+node packages/cli/cli.mjs port inspect game-prototype
+
+# Safe installation lifecycle
+node packages/cli/cli.mjs port install project-flow --dry-run
+node packages/cli/cli.mjs port install project-flow
+node packages/cli/cli.mjs port upgrade project-flow --dry-run
+node packages/cli/cli.mjs port upgrade project-flow --approve-overwrite
+node packages/cli/cli.mjs port uninstall project-flow --dry-run
+node packages/cli/cli.mjs port uninstall project-flow --approve
+```
+
+The default root is `~/.agents/skills`. For isolated testing on Windows PowerShell, macOS, and Linux, set `CODEX_SKILL_ROOT` to a temporary directory. The CLI supports `--dry-run`, approval-gated replacement, backup, rollback, and recoverable uninstall. It does not edit Codex configuration.
+
+## Evidence, not hype
+
+The Phase 7 functional smoke benchmark ran four valid paired trials on fresh local fixtures:
+
+- SEO audit: baseline `1/3`, assisted `3/3`.
+- Browser-game slice: baseline `2/3`, assisted `3/3`.
+- No timeouts; no network, credentials, paid services, or package installs.
+
+This is a limited fixture result, not a generalized model-improvement claim. Runtime compatibility, functional correctness, latency, and quality are reported separately. See the [benchmark methodology](benchmarks/README.md) and [raw Phase 7 evidence](benchmarks/results/phase-7-latest.json). The Phase 6 evidence remains preserved in the repository and website.
+
+## Security and licensing
+
+The repository is MIT licensed. Third-party projects retain their original licenses and attribution. The installer rejects symlinks, path traversal, unexpected files, unsafe executable or hook paths, missing license evidence, unsupported dependencies, corrupted backups, and hash mismatches. Read [SECURITY.md](SECURITY.md) before reporting a vulnerability and [the Phase 7 audit](docs/phase-7-capabilities.md) for source revisions and rejected candidates.
+
+## Development and release
 
 ```powershell
 npm test
 npm run verify
-npm run codex-runtime
-npm run benchmark:skills
+npm run onboarding:acceptance
+npm run benchmark:phase7
 ```
 
-Use `npm run benchmark:skills:full` only when you explicitly want the larger evaluation. See [QUICKSTART.md](QUICKSTART.md) for Windows, macOS, and Linux installation, upgrade, rollback, and uninstall commands.
+See [CONTRIBUTING.md](CONTRIBUTING.md), [RELEASE.md](RELEASE.md), [CHANGELOG.md](CHANGELOG.md), and [demos/README.md](demos/README.md). npm publication is intentionally not enabled: `codex-forge` was checked on the public npm registry and is currently unavailable, so GitHub checkout remains the verified install route until a separately approved release.
 
-`npm run codex-runtime` launches the installed local Codex CLI in a temporary Git project, asks it to use `project-flow`, and verifies the generated PRD, task decomposition, and status output. It requires a working Codex login; otherwise it reports harness-only evidence. The website is static and cannot execute conversions. Use the local CLI for conversion and validation. GitHub Actions does not merge generated ports or run arbitrary upstream code.
+## Roadmap
 
-The Jeff Allan batch conversion is reproducible with `node scripts/convert-jeffallan.mjs --source <clone> --revision <sha>`. It discovers all source skill directories, converts only the selected five, preserves reference assets and MIT notices, and records unsupported Claude-specific features. `npm run codex-multiskill-runtime` installs those five into an isolated Codex project and verifies each real skill session before promotion.
-
-Phase 5 benchmarks use five deterministic fixtures for architecture, code review, debugging, security, and testing. The baseline has no project skills; the assisted condition installs exactly one verified port and explicitly activates it. Hidden graders remain outside the temporary project, JSONL traces remain local, and the public summary is `benchmarks/results/phase-5-latest.json`. Runtime compatibility, functional correctness, and quality improvement are reported separately; mixed results are not presented as a general improvement claim.
-
-Phase 6 timeout analysis and the bounded process-tree fix are documented in [benchmarks/PHASE-5-TIMEOUT.md](benchmarks/PHASE-5-TIMEOUT.md). The new smoke benchmark is `npm run benchmark:skills`; the diverse full evaluation is explicitly invoked with `npm run benchmark:skills:full` and can resume with `npm run benchmark:skills:resume`.
-
-## License and security
-
-CODEX//FORGE source is MIT licensed. Third-party projects remain under their own licenses. See [SECURITY.md](SECURITY.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
+- Expand onboarding coverage across fresh Windows, Linux, and macOS runners.
+- Add more narrowly scoped ports only after license, security, runtime, and functional evidence.
+- Repeat benchmark trials before making any broader quality claim.
+- Consider an npm release only after ownership, provenance, signing, and publication approval are complete.

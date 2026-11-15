@@ -40,3 +40,20 @@ test('CLI port install and upgrade support dry-run without changing global confi
     else process.env.CODEX_SKILL_ROOT = previous;
   }
 });
+
+test('CLI resolves direct Phase 7 ports and reports package version', async () => {
+  const previous = process.env.CODEX_SKILL_ROOT;
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'codex-forge-cli-phase7-'));
+  process.env.CODEX_SKILL_ROOT = root;
+  try {
+    const install = logger();
+    await run(['port', 'install', 'seo-audit', '--dry-run'], install.io);
+    assert.equal(JSON.parse(install.output[0]).id, 'seo-audit');
+    const help = logger();
+    await run(['--help'], help.io);
+    assert.match(help.output[0], /codex-forge 0\.1\.0/);
+  } finally {
+    if (previous === undefined) delete process.env.CODEX_SKILL_ROOT;
+    else process.env.CODEX_SKILL_ROOT = previous;
+  }
+});

@@ -11,6 +11,7 @@ import { installPort, uninstallPort, resolveSkillRoot } from '../installer/insta
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const PORT_INDEX = path.join(ROOT, 'ports', 'index.json');
+const PACKAGE = JSON.parse(fs.readFileSync(path.join(ROOT, 'package.json'), 'utf8'));
 
 function loadPorts() {
   return JSON.parse(fs.readFileSync(PORT_INDEX, 'utf8'));
@@ -24,9 +25,10 @@ function findPort(id) {
 
 function verifiedPortDir(id) {
   const port = findPort(id);
-  const candidate = path.resolve(ROOT, 'ports', port.id === 'project-flow' ? port.id : path.join('jeffallan', port.id));
   const portsRoot = path.resolve(ROOT, 'ports');
-  if (!candidate.startsWith(`${portsRoot}${path.sep}`)) throw new Error('unsafe port path');
+  const candidates = [path.resolve(portsRoot, port.id), path.resolve(portsRoot, 'jeffallan', port.id)];
+  const candidate = candidates.find((entry) => fs.existsSync(path.join(entry, 'PORT.json')));
+  if (!candidate || !candidate.startsWith(`${portsRoot}${path.sep}`)) throw new Error(`verified port files are missing: ${port.id}`);
   return candidate;
 }
 
@@ -36,7 +38,7 @@ function portSearch(query = '') {
 }
 
 function usage() {
-  return `codex-forge 0.2.0 (development stage)\n\nCommands:\n` +
+  return `codex-forge ${PACKAGE.version}\n\nCommands:\n` +
     `  list [query]                         list local catalog entries\n` +
     `  search <query>                       search the local catalog\n` +
     `  inspect <id>                         inspect one catalog entry\n` +
