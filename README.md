@@ -87,6 +87,8 @@ The Phase 7 functional smoke benchmark ran four valid paired trials on fresh loc
 
 This is a limited fixture result, not a generalized model-improvement claim. Runtime compatibility, functional correctness, latency, and quality are reported separately. See the [benchmark methodology](benchmarks/README.md) and [raw Phase 7 evidence](benchmarks/results/phase-7-latest.json). The Phase 6 evidence remains preserved in the repository and website.
 
+An optional, local-only Headroom sidecar is documented in [docs/headroom.md](docs/headroom.md). It is disabled by default and has a separate baseline-versus-experiment command; no Headroom result is published until a real run completes.
+
 ## Security and licensing
 
 The repository is MIT licensed. Third-party projects retain their original licenses and attribution. The installer rejects symlinks, path traversal, unexpected files, unsafe executable or hook paths, missing license evidence, unsupported dependencies, corrupted backups, and hash mismatches. Read [SECURITY.md](SECURITY.md) before reporting a vulnerability and [the Phase 7 audit](docs/phase-7-capabilities.md) for source revisions and rejected candidates.

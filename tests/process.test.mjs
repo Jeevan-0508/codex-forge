@@ -27,3 +27,22 @@ test('process runner terminates a timed-out process tree', async () => {
   await new Promise((resolve) => setTimeout(resolve, 1200));
   assert.equal(fs.existsSync(marker), false, 'a descendant process survived tree cancellation');
 });
+
+test('process runner bounds hostile stdout and terminates the process tree', async () => {
+  const result = await runProcessTree(process.execPath, ['-e', 'setInterval(() => process.stdout.write("x".repeat(4096)), 1)'], { timeoutMs: 5000, killGraceMs: 100, maxStdoutBytes: 8192 });
+  assert.equal(result.outputLimit, 'stdout');
+  assert.equal(result.exitReason, 'output-limit');
+  assert.equal(classifyProcessResult(result), 'output-limit');
+  assert.ok(Buffer.byteLength(result.stdout, 'utf8') <= 8192);
+});
+
+test('process runner enforces an explicit zero output cap instead of silently defaulting', async () => {
+  assert.throws(() => runProcessTree(process.execPath, ['-e', 'process.stdout.write("x")'], { maxStdoutBytes: 0 }), /positive and finite/);
+});
+
+test('process runner bounds hostile stderr', async () => {
+  const result = await runProcessTree(process.execPath, ['-e', 'setInterval(() => process.stderr.write("e".repeat(4096)), 1)'], { timeoutMs: 5000, killGraceMs: 100, maxStderrBytes: 8192 });
+  assert.equal(result.outputLimit, 'stderr');
+  assert.equal(result.exitReason, 'output-limit');
+  assert.ok(Buffer.byteLength(result.stderr, 'utf8') <= 8192);
+});

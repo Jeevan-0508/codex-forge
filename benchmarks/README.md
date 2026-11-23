@@ -38,3 +38,15 @@ npm run benchmark:phase7
 ```
 
 This is four trials (two baseline and two assisted) and is intentionally not a full evaluation. The published result is `benchmarks/results/phase-7-latest.json`; its conclusion is limited to these fixtures and explicitly avoids a generalized improvement claim.
+
+## Optional Headroom experiment
+
+Headroom is an opt-in local proxy sidecar for a direct baseline-versus-experiment measurement. It is not installed by CODEX//FORGE and is disabled unless `CODEX_HEADROOM=1`. See [`docs/headroom.md`](../docs/headroom.md) for installation, security, fallback, and configuration details.
+
+```powershell
+$env:CODEX_HEADROOM='1'
+$env:CODEX_HEADROOM_REQUIRED='1'
+npm run benchmark:headroom
+```
+
+The experiment writes `benchmarks/results/headroom-latest.json`. It records measured provider usage and latency separately from Headroom's compression telemetry. No result is published until the run completes with valid pairs; unavailable or failed trials remain explicitly invalid.
