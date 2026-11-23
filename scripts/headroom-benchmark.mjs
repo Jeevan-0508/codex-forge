@@ -42,29 +42,36 @@ function conditionOrder(task, repetition) {
 
 async function trial(task, condition, repetition, order) {
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), `codex-forge-headroom-${task.id}-${condition}-${repetition}-`));
-  const project = path.join(temp, 'project');
-  createFixture(task, project);
-  spawnSync('git', ['init'], { cwd: project, encoding: 'utf8', windowsHide: true });
-  const prompt = `${task.prompt} This is the baseline-vs-Headroom condition. Do not activate or load a CODEX//FORGE skill. This is an isolated local evaluation. Do not inspect the CODEX//FORGE source repository or hidden evaluation data.`;
-  const lastMessage = path.join(temp, 'last-message.txt');
-  const args = ['exec', '--json', '--approve-for-me', '--ephemeral', '--ignore-user-config', '--ignore-rules', '--cd', project, '--output-last-message', lastMessage];
-  if (requestedModel) args.push('--model', requestedModel);
-  args.push(prompt);
   let session = null;
+  let sessionClosed = false;
   let setupError = null;
-  const setupStarted = Date.now();
-  if (condition === 'headroom') {
-    try { session = await startHeadroomProxy(config, { cwd: project }); }
-    catch (error) { setupError = error.message; }
+  try {
+    const project = path.join(temp, 'project');
+    createFixture(task, project);
+    spawnSync('git', ['init'], { cwd: project, encoding: 'utf8', windowsHide: true });
+    const prompt = `${task.prompt} This is the baseline-vs-Headroom condition. Do not activate or load a CODEX//FORGE skill. This is an isolated local evaluation. Do not inspect the CODEX//FORGE source repository or hidden evaluation data.`;
+    const lastMessage = path.join(temp, 'last-message.txt');
+    const args = ['exec', '--json', '--approve-for-me', '--ephemeral', '--ignore-user-config', '--ignore-rules', '--cd', project, '--output-last-message', lastMessage];
+    if (requestedModel) args.push('--model', requestedModel);
+    args.push(prompt);
+    const setupStarted = Date.now();
+    if (condition === 'headroom') {
+      try { session = await startHeadroomProxy(config, { cwd: project }); }
+      catch (error) { setupError = error.message; }
+    }
+    const startupMs = condition === 'headroom' ? Date.now() - setupStarted : 0;
+    if (setupError) return { task: task.id, condition, repetition, condition_order: order, prompt_sha256: sha256(prompt), valid: false, startup_ms: startupMs, setup_error: setupError, headroom: { requested: true, active: false, status: 'unavailable', telemetry_observed: false, stats: null } };
+    const result = await runProcessTree('codex', withHeadroomArgs(args, session), { cwd: project, timeoutMs: timeout, env: session?.env || directBenchmarkEnv(process.env, { stripProviderRouting: true }) });
+    const headroomResult = session ? await session.close() : null;
+    sessionClosed = Boolean(session);
+    const parsed = events(result.stdout || '');
+    const observedUsage = usage(parsed);
+    const valid = result.exitCode === 0 && (condition === 'baseline' || Boolean(session?.active && headroomResult?.telemetry_observed));
+    return { task: task.id, condition, repetition, condition_order: order, prompt_sha256: sha256(prompt), valid, startup_ms: startupMs, exit_reason: classifyProcessResult(result), timed_out: result.timedOut, exit_code: result.exitCode, elapsed_ms: result.elapsedMs, usage: observedUsage, model_observed: parsed.find((event) => event.model)?.model || null, grade: gradeTask(task, project), stderr_bytes: Buffer.byteLength(result.stderr || '', 'utf8'), headroom: { requested: condition === 'headroom', active: Boolean(session?.active), status: session?.status || 'disabled', telemetry_observed: Boolean(headroomResult?.telemetry_observed), stats: headroomResult?.stats || null, proxy_termination: headroomResult?.termination || null } };
+  } finally {
+    if (session && !sessionClosed) await session.close().catch(() => {});
+    fs.rmSync(temp, { recursive: true, force: true });
   }
-  const startupMs = condition === 'headroom' ? Date.now() - setupStarted : 0;
-  if (setupError) return { task: task.id, condition, repetition, condition_order: order, prompt_sha256: sha256(prompt), valid: false, startup_ms: startupMs, setup_error: setupError, headroom: { requested: true, active: false, status: 'unavailable', telemetry_observed: false, stats: null } };
-  const result = await runProcessTree('codex', withHeadroomArgs(args, session), { cwd: project, timeoutMs: timeout, env: session?.env || directBenchmarkEnv(process.env, { stripProviderRouting: true }) });
-  const headroomResult = session ? await session.close() : null;
-  const parsed = events(result.stdout || '');
-  const observedUsage = usage(parsed);
-  const valid = result.exitCode === 0 && (condition === 'baseline' || Boolean(session?.active && headroomResult?.telemetry_observed));
-  return { task: task.id, condition, repetition, condition_order: order, prompt_sha256: sha256(prompt), valid, startup_ms: startupMs, exit_reason: classifyProcessResult(result), timed_out: result.timedOut, exit_code: result.exitCode, elapsed_ms: result.elapsedMs, usage: observedUsage, model_observed: parsed.find((event) => event.model)?.model || null, grade: gradeTask(task, project), stderr_bytes: Buffer.byteLength(result.stderr || '', 'utf8'), headroom: { requested: condition === 'headroom', active: Boolean(session?.active), status: session?.status || 'disabled', telemetry_observed: Boolean(headroomResult?.telemetry_observed), stats: headroomResult?.stats || null, proxy_termination: headroomResult?.termination || null } };
 }
 
 function pairFor(task, repetition, trials) {

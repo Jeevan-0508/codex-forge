@@ -35,7 +35,7 @@ async function waitForHealth(url, child) {
 }
 
 async function stop(child) {
-  if (!child || child.exitCode !== null) return;
+  if (!child) return;
   if (process.platform === 'win32') {
     spawnSync('taskkill', ['/PID', String(child.pid), '/T', '/F'], { stdio: 'ignore', windowsHide: true, timeout: 5_000 });
   } else {
@@ -45,7 +45,7 @@ async function stop(child) {
       try { process.kill(-child.pid, 'SIGKILL'); } catch { child.kill('SIGKILL'); }
     }
   }
-  await new Promise((resolve) => child.once('close', resolve));
+  if (child.exitCode === null) await new Promise((resolve) => child.once('close', resolve));
 }
 
 const port = await findFreePort();

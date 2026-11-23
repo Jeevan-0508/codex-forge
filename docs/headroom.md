@@ -46,10 +46,11 @@ To require an already-running loopback proxy instead of starting one:
 ```powershell
 $env:CODEX_HEADROOM_PROXY='existing'
 $env:CODEX_HEADROOM_PORT='8787'
+$env:CODEX_HEADROOM_TRUST_EXISTING='1'
 npm run benchmark:skills
 ```
 
-`CODEX_HEADROOM_REQUIRED=1` turns an unavailable sidecar into a hard failure. Without it, the existing direct path is used and the trial is marked `headroom.status=unavailable`; it is never counted as a valid Headroom experiment. Recursive activation, remote proxy URLs, invalid modes, mismatched ports, and malformed values fail validation before a trial starts.
+`CODEX_HEADROOM_TRUST_EXISTING=1` is required when routing credentials and provider traffic through a proxy that CODEX//FORGE did not spawn; this is an explicit local trust decision. `CODEX_HEADROOM_REQUIRED=1` turns an unavailable sidecar into a hard failure. Without it, the existing direct path is used and the trial is marked `headroom.status=unavailable`; it is never counted as a valid Headroom experiment. Recursive activation, remote proxy URLs, invalid modes, mismatched ports, and malformed values fail validation before a trial starts.
 
 ## Baseline versus Headroom benchmark
 

@@ -50,15 +50,18 @@ export function parseHeadroomConfig(env = process.env) {
   const proxyPolicy = String(env.CODEX_HEADROOM_PROXY || 'auto').trim().toLowerCase();
   if (!['auto', 'existing', 'spawn'].includes(proxyPolicy)) throw new HeadroomConfigError('CODEX_HEADROOM_PROXY must be auto, existing, or spawn');
   const proxyUrl = localProxyUrl(env.CODEX_HEADROOM_PROXY_URL, 'CODEX_HEADROOM_PROXY_URL');
+  const trustExisting = booleanEnv(env.CODEX_HEADROOM_TRUST_EXISTING, 'CODEX_HEADROOM_TRUST_EXISTING', false);
   const port = positiveInt(env.CODEX_HEADROOM_PORT, 'CODEX_HEADROOM_PORT', null, 65_535);
   if (port !== null && port < 1024) throw new HeadroomConfigError('CODEX_HEADROOM_PORT must be between 1024 and 65535');
   if (proxyUrl && port !== null && Number(proxyUrl.port) !== port) throw new HeadroomConfigError('CODEX_HEADROOM_PORT does not match CODEX_HEADROOM_PROXY_URL');
   if (proxyPolicy === 'existing' && !proxyUrl && port === null) throw new HeadroomConfigError('existing Headroom proxy requires CODEX_HEADROOM_PROXY_URL or CODEX_HEADROOM_PORT');
   if (proxyPolicy === 'spawn' && proxyUrl) throw new HeadroomConfigError('spawn Headroom proxy cannot be combined with CODEX_HEADROOM_PROXY_URL');
+  const existingRequested = proxyPolicy === 'existing' || Boolean(proxyUrl) || (proxyPolicy === 'auto' && port !== null);
+  if (existingRequested && !trustExisting) throw new HeadroomConfigError('existing Headroom proxy requires CODEX_HEADROOM_TRUST_EXISTING=1');
   const startupTimeoutMs = positiveInt(env.CODEX_HEADROOM_STARTUP_TIMEOUT_MS, 'CODEX_HEADROOM_STARTUP_TIMEOUT_MS', DEFAULT_STARTUP_TIMEOUT_MS, MAX_STARTUP_TIMEOUT_MS);
   const command = String(env.CODEX_HEADROOM_BIN || 'headroom').trim();
   if (!command || command.includes('\0')) throw new HeadroomConfigError('CODEX_HEADROOM_BIN must be a non-empty executable name or path');
-  return { enabled, required, mode, proxyPolicy, proxyUrl, port, startupTimeoutMs, command, configHash: crypto.createHash('sha256').update(JSON.stringify({ enabled, required, mode, proxyPolicy, proxyUrl: proxyUrl?.origin || null, port, startupTimeoutMs, command })).digest('hex') };
+  return { enabled, required, mode, proxyPolicy, proxyUrl, port, trustExisting, startupTimeoutMs, command, configHash: crypto.createHash('sha256').update(JSON.stringify({ enabled, required, mode, proxyPolicy, proxyUrl: proxyUrl?.origin || null, port, trustExisting, startupTimeoutMs, command })).digest('hex') };
 }
 
 export function directBenchmarkEnv(env = process.env, { stripProviderRouting = false } = {}) {
@@ -157,11 +160,12 @@ function killTree(pid, signal = 'SIGTERM') {
   catch (error) { return { attempted: true, method: `process-group-${signal.toLowerCase()}`, error: error.code || error.message }; }
 }
 
-async function stopProxy(child) {
-  if (!child || child.exitCode !== null) return null;
-  const termination = killTree(child.pid, 'SIGTERM');
-  await new Promise((resolve) => { const timer = setTimeout(resolve, 1_500); child.once('close', () => { clearTimeout(timer); resolve(); }); });
-  if (child.exitCode === null && process.platform !== 'win32') {
+async function stopProxy(child, ownerPid = null) {
+  if (!child && !ownerPid) return null;
+  const termination = child?.pid ? killTree(child.pid, 'SIGTERM') : { attempted: false, method: 'owner-only' };
+  if (ownerPid && ownerPid !== child?.pid) termination.owner = killTree(ownerPid, 'SIGTERM');
+  if (child && child.exitCode === null) await new Promise((resolve) => { const timer = setTimeout(resolve, 1_500); child.once('close', () => { clearTimeout(timer); resolve(); }); });
+  if (process.platform !== 'win32' && child?.exitCode === null) {
     termination.force = killTree(child.pid, 'SIGKILL');
     await new Promise((resolve) => { const timer = setTimeout(resolve, 1_000); child.once('close', () => { clearTimeout(timer); resolve(); }); });
   }
@@ -265,7 +269,7 @@ export async function startHeadroomProxy(config, { cwd, env = process.env } = {}
     const proxyUrl = new URL(`http://127.0.0.1:${port}`);
     await waitForReady(proxyUrl.origin, child, config.startupTimeoutMs, () => spawnError);
     const ownerPid = await waitForOwnedListener(port, child.pid, config.startupTimeoutMs);
-    return { enabled: true, active: true, status: 'spawned', proxyUrl: proxyUrl.origin, ownerPid, args: ['--config', `openai_base_url="${proxyUrl.origin}/v1"`], env: { ...routedEnv, OPENAI_BASE_URL: `${proxyUrl.origin}/v1` }, close: async () => { const stats = await getJson(`${proxyUrl.origin}/stats`).then(statsSummary).catch(() => null); const termination = await stopProxy(child); return { stats, termination, telemetry_observed: telemetryObserved(stats), proxy_output: { stdout_bytes: Buffer.byteLength(proxyStdout), stderr_bytes: Buffer.byteLength(proxyStderr) } }; } };
+    return { enabled: true, active: true, status: 'spawned', proxyUrl: proxyUrl.origin, ownerPid, args: ['--config', `openai_base_url="${proxyUrl.origin}/v1"`], env: { ...routedEnv, OPENAI_BASE_URL: `${proxyUrl.origin}/v1` }, close: async () => { const stats = await getJson(`${proxyUrl.origin}/stats`).then(statsSummary).catch(() => null); const termination = await stopProxy(child, ownerPid); return { stats, termination, telemetry_observed: telemetryObserved(stats), proxy_output: { stdout_bytes: Buffer.byteLength(proxyStdout), stderr_bytes: Buffer.byteLength(proxyStderr) } }; } };
   } catch (error) {
     await stopProxy(child);
     throw new Error(`headroom-startup-${safeErrorCode(error)}`);

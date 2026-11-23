@@ -18,6 +18,7 @@ test('Headroom configuration rejects malformed, recursive, and non-loopback sett
   assert.throws(() => parseHeadroomConfig({ CODEX_HEADROOM: '1', CODEX_HEADROOM_PROXY_URL: 'https://127.0.0.1:8787' }), /http/);
   assert.throws(() => parseHeadroomConfig({ CODEX_HEADROOM: '1', CODEX_HEADROOM_PROXY_URL: 'http://example.test:8787' }), /loopback/);
   assert.throws(() => parseHeadroomConfig({ CODEX_HEADROOM: '1', CODEX_HEADROOM_PROXY_URL: 'http://localhost:8787' }), /loopback IP literal/);
+  assert.throws(() => parseHeadroomConfig({ CODEX_HEADROOM: '1', CODEX_HEADROOM_PROXY: 'existing', CODEX_HEADROOM_PORT: '8787' }), /TRUST_EXISTING/);
   assert.throws(() => parseHeadroomConfig({ CODEX_HEADROOM: '1', CODEX_HEADROOM_MODE: 'lossy' }), /cache or token/);
 });
 
@@ -33,7 +34,7 @@ test('Headroom existing-proxy mode reads bounded local stats and never owns the 
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
   const port = server.address().port;
   try {
-    const config = parseHeadroomConfig({ CODEX_HEADROOM: '1', CODEX_HEADROOM_PROXY: 'existing', CODEX_HEADROOM_PORT: String(port) });
+    const config = parseHeadroomConfig({ CODEX_HEADROOM: '1', CODEX_HEADROOM_PROXY: 'existing', CODEX_HEADROOM_PORT: String(port), CODEX_HEADROOM_TRUST_EXISTING: '1' });
     const session = await startHeadroomProxy(config);
     assert.equal(session.status, 'existing');
     assert.equal(session.env.CODEX_FORGE_HEADROOM_ACTIVE, '1');
@@ -58,7 +59,7 @@ test('Headroom does not treat an empty stats object as observed telemetry', asyn
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
   try {
     const port = server.address().port;
-    const config = parseHeadroomConfig({ CODEX_HEADROOM: '1', CODEX_HEADROOM_PROXY: 'existing', CODEX_HEADROOM_PORT: String(port) });
+    const config = parseHeadroomConfig({ CODEX_HEADROOM: '1', CODEX_HEADROOM_PROXY: 'existing', CODEX_HEADROOM_PORT: String(port), CODEX_HEADROOM_TRUST_EXISTING: '1' });
     const session = await startHeadroomProxy(config);
     const result = await session.close();
     assert.equal(result.stats, null);
@@ -83,7 +84,7 @@ test('Headroom rejects oversized health responses before buffering them', async 
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
   try {
     const port = server.address().port;
-    const config = parseHeadroomConfig({ CODEX_HEADROOM: '1', CODEX_HEADROOM_PROXY: 'existing', CODEX_HEADROOM_PORT: String(port), CODEX_HEADROOM_STARTUP_TIMEOUT_MS: '1000' });
+    const config = parseHeadroomConfig({ CODEX_HEADROOM: '1', CODEX_HEADROOM_PROXY: 'existing', CODEX_HEADROOM_PORT: String(port), CODEX_HEADROOM_TRUST_EXISTING: '1', CODEX_HEADROOM_STARTUP_TIMEOUT_MS: '1000' });
     await assert.rejects(() => startHeadroomProxy(config), /headroom-startup-proxy-readiness-timeout|response-size-limit/);
   } finally {
     await new Promise((resolve) => server.close(resolve));
@@ -98,7 +99,7 @@ test('Headroom rejects malformed health JSON within the bounded readiness window
   await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
   try {
     const port = server.address().port;
-    const config = parseHeadroomConfig({ CODEX_HEADROOM: '1', CODEX_HEADROOM_PROXY: 'existing', CODEX_HEADROOM_PORT: String(port), CODEX_HEADROOM_STARTUP_TIMEOUT_MS: '1000' });
+    const config = parseHeadroomConfig({ CODEX_HEADROOM: '1', CODEX_HEADROOM_PROXY: 'existing', CODEX_HEADROOM_PORT: String(port), CODEX_HEADROOM_TRUST_EXISTING: '1', CODEX_HEADROOM_STARTUP_TIMEOUT_MS: '1000' });
     await assert.rejects(() => startHeadroomProxy(config), /readiness-timeout/);
   } finally {
     await new Promise((resolve) => server.close(resolve));
