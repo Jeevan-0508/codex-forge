@@ -6,6 +6,7 @@ import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { installPort } from '../packages/installer/install.mjs';
 import { runProcessTree, classifyProcessResult } from '../packages/evaluation/process.mjs';
+import { directBenchmarkEnv, parseHeadroomConfig, startHeadroomProxy, withHeadroomArgs } from '../packages/evaluation/headroom.mjs';
 import { TASKS, DIVERSE_TASKS, createFixture, gradeTask } from '../benchmarks/tasks.mjs';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -21,6 +22,7 @@ const checkpointPath = argValue('--checkpoint') || path.join(root, 'benchmarks',
 const resume = args.includes('--resume');
 const requestedModel = process.env.CODEX_BENCHMARK_MODEL || null;
 const codexVersion = spawnSync('codex', ['--version'], { encoding: 'utf8', windowsHide: true }).stdout?.trim() || 'unavailable';
+const headroomConfig = parseHeadroomConfig();
 
 const environment = {
   node: process.version,
@@ -30,7 +32,13 @@ const environment = {
   model_requested: requestedModel,
   model_observed: null,
   configuration: ['--ignore-user-config', '--ignore-rules', '--ephemeral', '--approve-for-me (workspace-write implied)'],
-  paid_api_calls: false
+  paid_api_calls: false,
+  headroom: {
+    requested: headroomConfig.enabled,
+    mode: headroomConfig.enabled ? headroomConfig.mode : null,
+    proxy_policy: headroomConfig.enabled ? headroomConfig.proxyPolicy : null,
+    config_hash: headroomConfig.enabled ? headroomConfig.configHash : null
+  }
 };
 
 function parseEvents(stdout) {
@@ -104,7 +112,22 @@ async function runTrial(task, condition, repetition, order) {
   const commandArgs = ['exec', '--json', '--approve-for-me', '--ephemeral', '--ignore-user-config', '--ignore-rules', '--cd', project, '--output-last-message', lastMessage];
   if (requestedModel) commandArgs.push('--model', requestedModel);
   commandArgs.push(prompt);
-  const result = await runProcessTree('codex', commandArgs, { cwd: project, timeoutMs: timeout });
+  let headroomSession = null;
+  let headroomError = null;
+  if (headroomConfig.enabled) {
+    try {
+      headroomSession = await startHeadroomProxy(headroomConfig, { cwd: project });
+    } catch (error) {
+      if (headroomConfig.required) throw error;
+      headroomError = error.message;
+    }
+  }
+  const result = await runProcessTree('codex', withHeadroomArgs(commandArgs, headroomSession), {
+    cwd: project,
+    timeoutMs: timeout,
+    env: headroomSession?.env || directBenchmarkEnv()
+  });
+  const headroomResult = headroomSession ? await headroomSession.close() : null;
   fs.writeFileSync(trace, result.stdout || '', 'utf8');
   const events = parseEvents(result.stdout || '');
   const commands = commandEvents(events);
@@ -112,7 +135,7 @@ async function runTrial(task, condition, repetition, order) {
   const grade = gradeTask(task, project);
   const observed = observedModel(events);
   if (observed && !environment.model_observed) environment.model_observed = observed;
-  const valid = result.exitCode === 0 && (condition === 'baseline' ? !fs.existsSync(path.join(project, '.agents', 'skills')) && !read : read);
+  const valid = result.exitCode === 0 && (!headroomConfig.enabled || Boolean(headroomSession?.active && headroomResult?.telemetry_observed)) && (condition === 'baseline' ? !fs.existsSync(path.join(project, '.agents', 'skills')) && !read : read);
   return {
     key: `${task.id}:${repetition}:${condition}`,
     task: task.id,
@@ -136,6 +159,16 @@ async function runTrial(task, condition, repetition, order) {
     model_observed: observed,
     skill_read: read,
     valid,
+    headroom: {
+      requested: headroomConfig.enabled,
+      active: Boolean(headroomSession?.active),
+      status: headroomSession?.status || (headroomError ? 'unavailable' : 'disabled'),
+      error: headroomError,
+      telemetry_observed: Boolean(headroomResult?.telemetry_observed),
+      stats: headroomResult?.stats || null,
+      proxy_termination: headroomResult?.termination || null,
+      proxy_output: headroomResult?.proxy_output || null
+    },
     grade,
     evidence: {
       artifact_files: fs.existsSync(path.join(project, 'artifacts')) ? fs.readdirSync(path.join(project, 'artifacts')).sort() : [],

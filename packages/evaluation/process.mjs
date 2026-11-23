@@ -30,8 +30,12 @@ function forceKillProcessTree(pid) {
  * Windows uses taskkill /T; Unix-like systems use a detached process group.
  */
 export function runProcessTree(command, args = [], options = {}) {
-  const timeoutMs = Number(options.timeoutMs || 120000);
-  const killGraceMs = Number(options.killGraceMs || 1500);
+  const timeoutMs = Number(options.timeoutMs ?? 120000);
+  const killGraceMs = Number(options.killGraceMs ?? 1500);
+  const maxStdoutBytes = Number(options.maxStdoutBytes ?? 16 * 1024 * 1024);
+  const maxStderrBytes = Number(options.maxStderrBytes ?? 2 * 1024 * 1024);
+  if (!Number.isFinite(maxStdoutBytes) || maxStdoutBytes <= 0) throw new RangeError('maxStdoutBytes must be positive and finite');
+  if (!Number.isFinite(maxStderrBytes) || maxStderrBytes <= 0) throw new RangeError('maxStderrBytes must be positive and finite');
   const startedAt = Date.now();
   const child = spawn(command, args, {
     cwd: options.cwd,
@@ -46,10 +50,27 @@ export function runProcessTree(command, args = [], options = {}) {
   let forceKillHandle;
   let settled = false;
   let timedOut = false;
+  let outputLimit = null;
   let termination;
 
-  child.stdout?.on('data', (chunk) => { stdout += chunk.toString(); });
-  child.stderr?.on('data', (chunk) => { stderr += chunk.toString(); });
+  const stopForOutputLimit = (stream, limit) => {
+    if (settled || outputLimit) return;
+    outputLimit = stream;
+    termination = killProcessTree(child.pid);
+    forceKillHandle = setTimeout(() => forceKillProcessTree(child.pid), killGraceMs);
+    if (stream === 'stdout') stdout = stdout.slice(-limit);
+    else stderr = stderr.slice(-limit);
+  };
+  child.stdout?.on('data', (chunk) => {
+    const value = chunk.toString();
+    if (Buffer.byteLength(stdout, 'utf8') + Buffer.byteLength(value, 'utf8') > maxStdoutBytes) stopForOutputLimit('stdout', maxStdoutBytes);
+    else stdout += value;
+  });
+  child.stderr?.on('data', (chunk) => {
+    const value = chunk.toString();
+    if (Buffer.byteLength(stderr, 'utf8') + Buffer.byteLength(value, 'utf8') > maxStderrBytes) stopForOutputLimit('stderr', maxStderrBytes);
+    else stderr += value;
+  });
 
   return new Promise((resolve) => {
     const finish = (result) => {
@@ -64,8 +85,9 @@ export function runProcessTree(command, args = [], options = {}) {
         pid: child.pid ?? null,
         elapsedMs: Date.now() - startedAt,
         timedOut,
+        outputLimit,
         termination,
-        exitReason: timedOut ? 'timeout' : result.error ? 'spawn-error' : result.signal ? `signal:${result.signal}` : result.exitCode === 0 ? 'success' : 'exit-code'
+        exitReason: timedOut ? 'timeout' : outputLimit ? 'output-limit' : result.error ? 'spawn-error' : result.signal ? `signal:${result.signal}` : result.exitCode === 0 ? 'success' : 'exit-code'
       });
     };
 
@@ -82,6 +104,7 @@ export function runProcessTree(command, args = [], options = {}) {
 
 export function classifyProcessResult(result) {
   if (result.timedOut) return 'timeout';
+  if (result.outputLimit) return 'output-limit';
   if (result.error) return 'spawn-error';
   if (result.exitCode === 0) return 'success';
   if (result.signal) return `signal:${result.signal}`;
